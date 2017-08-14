@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final ViewPager pager = (ViewPager) findViewById(R.id.container);
         pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
-        ImageButton profileButton = (ImageButton) findViewById(R.id.imageProfileButton);
         refreshButtonColours(pager.getCurrentItem());
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -50,26 +49,36 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        ImageButton profileButton = (ImageButton) findViewById(R.id.imageProfileButton);
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pager.setCurrentItem(0,true);
             }
         });
-        ImageButton mapButton = (ImageButton) findViewById(R.id.imageMapButton);
-        mapButton.setOnClickListener(new View.OnClickListener() {
+        ImageButton chatButton = (ImageButton) findViewById(R.id.imageChatButton);
+        chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pager.setCurrentItem(1,true);
             }
         });
-        ImageButton chatButton = (ImageButton) findViewById(R.id.imageChatButton);
-        chatButton.setOnClickListener(new View.OnClickListener() {
+        ImageButton matchButton = (ImageButton) findViewById(R.id.imageMatchButton);
+        matchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pager.setCurrentItem(2,true);
             }
         });
+        ImageButton mapButton = (ImageButton) findViewById(R.id.imageMapButton);
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pager.setCurrentItem(3,true);
+            }
+        });
+
     }
 
     //Pager stworzony na potrzeby tego jednego activity
@@ -85,18 +94,21 @@ public class MainActivity extends AppCompatActivity {
                     return MainProfileFragment.newInstance();
                 }
                 case 1: {
-                    return MainMapFragment.newInstance();
-                }
-                case 2: {
                     return MainChatFragment.newInstance();
                 }
-                default: return MainChatFragment.newInstance();
+                case 2: {
+                    return MainMatchFragment.newInstance();
+                }
+                case 3: {
+                    return MainMapFragment.newInstance();
+                }
+                default: return MainMapFragment.newInstance();
             }
         }
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
     }
 
@@ -104,24 +116,34 @@ public class MainActivity extends AppCompatActivity {
         ImageButton profileButton = (ImageButton) findViewById(R.id.imageProfileButton);
         ImageButton mapButton = (ImageButton) findViewById(R.id.imageMapButton);
         ImageButton chatButton = (ImageButton) findViewById(R.id.imageChatButton);
+        ImageButton matchButton = (ImageButton) findViewById(R.id.imageMatchButton);
         switch(position) {
             case 0: {
                 profileButton.setColorFilter(color);
-                mapButton.setColorFilter(Color.GRAY);
                 chatButton.setColorFilter(Color.GRAY);
+                matchButton.setColorFilter(Color.GRAY);
+                mapButton.setColorFilter(Color.GRAY);
                 break;
             }
             case 1: {
                 profileButton.setColorFilter(Color.GRAY);
-                mapButton.setColorFilter(color);
-                chatButton.setColorFilter(Color.GRAY);
+                chatButton.setColorFilter(color);
+                matchButton.setColorFilter(Color.GRAY);
+                mapButton.setColorFilter(Color.GRAY);
                 break;
             }
             case 2: {
                 profileButton.setColorFilter(Color.GRAY);
+                chatButton.setColorFilter(Color.GRAY);
+                matchButton.setColorFilter(color);
                 mapButton.setColorFilter(Color.GRAY);
-                chatButton.setColorFilter(color);
                 break;
+            }
+            case 3: {
+                profileButton.setColorFilter(Color.GRAY);
+                chatButton.setColorFilter(Color.GRAY);
+                matchButton.setColorFilter(Color.GRAY);
+                mapButton.setColorFilter(color);
             }
         }
     }

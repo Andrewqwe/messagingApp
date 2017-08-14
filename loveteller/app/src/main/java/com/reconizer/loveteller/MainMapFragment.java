@@ -72,9 +72,7 @@ public class MainMapFragment extends Fragment implements OnMapReadyCallback {
         googleMap.setIndoorEnabled(true);
         googleMap.getUiSettings().setZoomControlsEnabled(true);
 
-        LatLng sydney = new LatLng(-33.867, 151.206);
         googleMap.setMyLocationEnabled(true);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 15));
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }
 

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "695368176930-2etu95bimumlvic9alqiuihlfo391n0o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.reconizer.loveteller",
+            "certificate_hash": "0172521c97ce0a6b0fb3cef08b15ccbb8d06e7db"
+          }
+        },
+        {
           "client_id": "695368176930-9drtc2too0lq3t4eg851p3u43mjf8kk0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

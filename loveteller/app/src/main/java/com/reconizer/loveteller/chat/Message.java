@@ -1,4 +1,4 @@
-package com.reconizer.loveteller.Chat;
+package com.reconizer.loveteller.chat;
 
 /**
  * Created by Damian on 15.08.2017.

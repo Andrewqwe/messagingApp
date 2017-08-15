@@ -57,6 +57,10 @@ public class MainMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void startMap() {
+        /*
+        * TODO: Logika tego do przebudowania bo przy pierwszym odpaleniu na
+        * TODO: nowym telefonie wszystko się wywala i dopiero pyta o permisje
+        */
         if (ActivityCompat.checkSelfPermission(getContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(),

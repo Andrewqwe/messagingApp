@@ -30,22 +30,32 @@
                 />
 
             <ImageButton
-                android:id="@+id/imageMapButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:foregroundGravity="center"
-                app:srcCompat="@drawable/ic_map_selected"
-                android:background="@color/colorPrimary"
-                />
-
-            <ImageButton
                 android:id="@+id/imageChatButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:foregroundGravity="right"
                 app:srcCompat="@drawable/ic_chat_selected"
+                android:background="@color/colorPrimary"
+                />
+
+            <ImageButton
+                android:id="@+id/imageMatchButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:foregroundGravity="right"
+                app:srcCompat="@drawable/ic_match_selected"
+                android:background="@color/colorPrimary"
+                />
+
+            <ImageButton
+                android:id="@+id/imageMapButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:foregroundGravity="center"
+                app:srcCompat="@drawable/ic_map_selected"
                 android:background="@color/colorPrimary"
                 />
 

@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="70dp"
     android:weightSum="1"
     android:background="?android:selectableItemBackground"
     android:clickable="true"
-    android:gravity="center_vertical"
+    android:gravity="center_horizontal"
     android:paddingTop="2dp"
     android:paddingBottom="5dp"
     android:paddingStart="5dp"
@@ -15,22 +15,22 @@
 
     <ImageButton
         android:id="@+id/chatProfileImageButton"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:background="@drawable/chat_profile_picture_imageshape"
-        app:srcCompat="@color/colorAccent"
-        />
+        android:layout_alignParentBottom="true" />
     <TextView
-        android:id="@+id/otherMessageTextView"
+        android:id="@+id/MessageTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@+id/chatProfileImageButton"
-        android:layout_alignBottom="@+id/chatProfileImageButton"
         android:textColor="@color/black"
-        android:layout_margin="5dp"
         android:background="@drawable/message_box"
         android:padding="5dp"
         android:text="lololololololololololololololololololol"
-        />
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

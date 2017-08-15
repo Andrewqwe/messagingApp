@@ -29,7 +29,7 @@ public class MainChatFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View myFragmentView = inflater.inflate(R.layout.main_chat_fragment, container, false);
-
+        conversations.clear();
         chatListAdapter = new ChatListAdapter(conversations);
 
         chatView = (RecyclerView)myFragmentView.findViewById(R.id.chatView);

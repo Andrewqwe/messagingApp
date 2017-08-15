@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="70dp"
     android:weightSum="4"
     android:background="?android:selectableItemBackground"
     android:clickable="true"
@@ -12,15 +12,18 @@
     android:paddingStart="5dp"
     android:paddingEnd="5dp"
     >
+
     <TextView
-        android:id="@+id/mineMessageTextView"
+        android:id="@+id/MessageTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
-        android:layout_margin="5dp"
         android:background="@drawable/message_box"
         android:padding="5dp"
         android:text="lololololololololololololololololololol"
-        />
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

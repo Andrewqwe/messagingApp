@@ -23,6 +23,7 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        messageList.clear();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         recyclerView = (RecyclerView) findViewById(R.id.chatRecyclerView);
@@ -40,11 +41,21 @@ public class ChatActivity extends AppCompatActivity {
             Message message = new Message(0,"Czesc");
             messageList.add(message);
 
+            message = new Message(0,"No hej");
+            messageList.add(message);
+
             message = new Message(0,"Co slychac ?");
             messageList.add(message);
 
-            message = new Message(0,"U mnie wszystko w porzadku :)");
+            message = new Message(0,"Wszystko w porzadku a u ciebie ?");
             messageList.add(message);
+
+            message = new Message(0,"Nie wiem jak zrobic dynamiczne skalowanie tych pieprzonych dymkow.");
+            messageList.add(message);
+
+            message = new Message(0,"TO STRASZNE !");
+            messageList.add(message);
+
 
             chatAdapter.notifyDataSetChanged();
         }

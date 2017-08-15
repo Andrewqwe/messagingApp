@@ -1,6 +1,7 @@
 package com.reconizer.loveteller.chat;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +21,20 @@ class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyViewHolder>
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.chat_list_row, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_list_row, parent, false);
 
         return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("Pos", String.valueOf(holder.getAdapterPosition()));
+            }
+        });
         //Conversation conversation = conversations.get(position);
 
         //TODO Pobieranie informacji z profilu
@@ -54,6 +61,4 @@ class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyViewHolder>
     public ChatListAdapter(ArrayList<Conversation> conversations) {
         this.conversations = conversations;
     }
-
-
 }

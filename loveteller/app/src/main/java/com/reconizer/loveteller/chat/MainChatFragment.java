@@ -1,4 +1,4 @@
-package com.reconizer.loveteller.Chat;
+package com.reconizer.loveteller.chat;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

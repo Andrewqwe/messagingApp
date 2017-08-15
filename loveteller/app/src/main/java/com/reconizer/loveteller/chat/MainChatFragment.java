@@ -43,6 +43,7 @@ public class MainChatFragment extends Fragment {
 
         return myFragmentView;
     }
+
     public static MainChatFragment newInstance(){
         MainChatFragment f = new MainChatFragment();
 // https://stackoverflow.com/questions/18413309/how-to-implement-a-viewpager-with-different-fragments-layouts

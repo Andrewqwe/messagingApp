@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.firebase.ui.auth.AuthUI;
-import com.reconizer.loveteller.Chat.MainChatFragment;
+import com.reconizer.loveteller.chat.MainChatFragment;
 
 import java.util.Arrays;
 

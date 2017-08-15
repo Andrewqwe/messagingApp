@@ -17,6 +17,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Arrays;
+
 /**
  * Created by Andrzej on 2017-08-06.
  */
@@ -24,12 +29,22 @@ import android.widget.ImageButton;
 public class MainActivity extends AppCompatActivity {
 
     static int color = Color.parseColor("#ffff8800");
-
+    private static final int RC_SIGN_IN = 123;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setIsSmartLockEnabled(false)
+                        //.setTheme(R.style.GreenTheme)
+                        .setAvailableProviders(
+                                Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                        new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+                        .build(),
+                RC_SIGN_IN);
         final ViewPager pager = (ViewPager) findViewById(R.id.container);
         pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
         refreshButtonColours(pager.getCurrentItem());

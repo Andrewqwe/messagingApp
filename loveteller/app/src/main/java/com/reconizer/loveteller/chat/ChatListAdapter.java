@@ -1,5 +1,6 @@
 package com.reconizer.loveteller.chat;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +23,6 @@ class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyViewHolder>
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_list_row, parent, false);
-
         return new MyViewHolder(itemView);
     }
 
@@ -32,7 +32,9 @@ class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyViewHolder>
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("Pos", String.valueOf(holder.getAdapterPosition()));
+                //Log.e("Pos", String.valueOf(holder.getAdapterPosition()));
+                Intent intent = new Intent(v.getContext(),ChatActivity.class);
+                v.getContext().startActivity(intent);
             }
         });
         //Conversation conversation = conversations.get(position);

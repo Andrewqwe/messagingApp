@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -33,18 +34,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
+        //Database.test(); //-pierwszy zapis do bazy danych - potwierdzenie działania połączenia :) Radek
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();  //Radek  //TODO: po wciśnięciu przycisku powrotu omijamy proces logowania naprawić!
+        if (auth.getCurrentUser() != null) {
+            // already signed in
+        } else {
+            // not signed in
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setIsSmartLockEnabled(false)
+                            //.setTheme(R.style.GreenTheme)  //TODO: dodać plik ze stylem i logo do panelu logowania
+                            .setAvailableProviders(
+                                    Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                            new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
+                                            new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+                            .build(),
+                    RC_SIGN_IN);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setIsSmartLockEnabled(false)
-                        //.setTheme(R.style.GreenTheme)
-                        .setAvailableProviders(
-                                Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                        new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
-                        .build(),
-                RC_SIGN_IN);
         final ViewPager pager = (ViewPager) findViewById(R.id.container);
         pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
         refreshButtonColours(pager.getCurrentItem());

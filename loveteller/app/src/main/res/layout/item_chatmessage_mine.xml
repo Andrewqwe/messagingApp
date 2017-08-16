@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:weightSum="4"
+    android:background="?android:selectableItemBackground"
+    android:clickable="true"
+    android:gravity="right"
+    android:paddingTop="2dp"
+    android:paddingBottom="5dp"
+    android:paddingStart="5dp"
+    android:paddingEnd="5dp"
+    >
+
+    <TextView
+        android:id="@+id/MessageTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:background="@drawable/message_box"
+        android:padding="5dp"
+        android:text="lololololololololololololololololololol"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>

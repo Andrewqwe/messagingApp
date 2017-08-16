@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "695368176930",
+    "firebase_url": "https://loveteller-38e7a.firebaseio.com",
+    "project_id": "loveteller-38e7a",
+    "storage_bucket": "loveteller-38e7a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:695368176930:android:064acedf139e1231",
+        "android_client_info": {
+          "package_name": "com.reconizer.loveteller"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "695368176930-2etu95bimumlvic9alqiuihlfo391n0o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.reconizer.loveteller",
+            "certificate_hash": "0172521c97ce0a6b0fb3cef08b15ccbb8d06e7db"
+          }
+        },
+        {
+          "client_id": "695368176930-9drtc2too0lq3t4eg851p3u43mjf8kk0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.reconizer.loveteller",
+            "certificate_hash": "91ad35f3d82225dc1bfa9bfa6cf9a9ae1783df77"
+          }
+        },
+        {
+          "client_id": "695368176930-nard01c5t2tmng5rfn3u97lta8a8q2qv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABqFheZjqZDzBftenh97NeQA-b2mDg9x8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "695368176930-nard01c5t2tmng5rfn3u97lta8a8q2qv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

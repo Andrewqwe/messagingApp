@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseAuth auth = FirebaseAuth.getInstance();  //Radek  //TODO: po wciśnięciu przycisku powrotu omijamy proces logowania naprawić!
         if (auth.getCurrentUser() != null) {
+            Database.SendUserInfoToDatabase();
             // already signed in
         } else {
             // not signed in
@@ -170,5 +171,12 @@ public class MainActivity extends AppCompatActivity {
                 mapButton.setColorFilter(color);
             }
         }
+    }
+   @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in.
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) Database.SendUserInfoToDatabase();
     }
 }

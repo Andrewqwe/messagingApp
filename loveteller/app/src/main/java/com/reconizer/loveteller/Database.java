@@ -1,8 +1,17 @@
 package com.reconizer.loveteller;
 
+import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.internal.ImageRequest;
 import com.firebase.ui.auth.ui.User;
+import com.google.firebase.auth.FacebookAuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -10,6 +19,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Scanner;
 
 /**
  * Created by Radosław on 2017-08-16.
@@ -29,14 +43,6 @@ public class Database {
 
     /*funkcje do zwracania sciezek do katalogow uzytkownikow w bazie danych*/
     //public static String getVisitsPath() { return users_dir + "/" + mCurrentUid + "/" + visits_dir; }
-
-
-static public void  test(){
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("message");
-
-    myRef.setValue("Hello, World!");
-}
 
     public static void Initialize(boolean persistence) {
         if (mDatabase == null){
@@ -113,6 +119,61 @@ static public void  test(){
 
             }
         });
+    }
+    public static void facebook (){
+
+        GraphRequest request = GraphRequest.newMeRequest(
+                AccessToken.getCurrentAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(
+                            JSONObject object,
+                            GraphResponse response) {
+                        // Application code
+                        try {
+                            com.reconizer.loveteller.User user = new com.reconizer.loveteller.User(
+                                    object.getString("first_name").toString(),
+                                    object.getString("last_name").toString(),
+                                    object.getString("email").toString(),
+                                    object.getString("gender").toString(),
+                                    object.getString("age_range").toString(),
+                                    GetUserImage().toString(),
+                                    object.getString("id").toString());
+                            mDatabaseReference.child(GetUserUID()).setValue(user);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,first_name,gender,age_range,last_name,email,picture");
+        request.setParameters(parameters);
+        request.executeAsync();
+    }
+
+    public static void importFbProfilePhoto() {
+        Log.e("scoiatael", "token" + AccessToken.getCurrentAccessToken());
+        if (AccessToken.getCurrentAccessToken() != null) {
+
+            GraphRequest request = GraphRequest.newMeRequest(
+                    AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(JSONObject me, GraphResponse response) {
+
+                            if (AccessToken.getCurrentAccessToken() != null) {
+                                if (me != null) {
+
+                                    String profileImageUrl = ImageRequest.getProfilePictureUri(me.optString("id"), 500, 500).toString();
+                                    Log.e("scoiatael",profileImageUrl);
+                                   // Toast.makeText(Database.this,"aaa"+profileImageUrl,Toast.LENGTH_LONG).show();
+                                    System.out.println("scoiatael"+profileImageUrl);
+
+                                }
+                            }
+                        }
+                    });
+            GraphRequest.executeBatchAsync(request);
+        }
     }
 
 }

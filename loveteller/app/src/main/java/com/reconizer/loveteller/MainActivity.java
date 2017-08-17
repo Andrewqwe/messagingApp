@@ -2,6 +2,7 @@ package com.reconizer.loveteller;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +20,7 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.reconizer.loveteller.chat.MainChatFragment;
 
+import java.io.Console;
 import java.util.Arrays;
 
 /**
@@ -31,12 +33,10 @@ public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-
-        //Database.test(); //-pierwszy zapis do bazy danych - potwierdzenie działania połączenia :) Radek
-
         FirebaseAuth auth = FirebaseAuth.getInstance();  //Radek  //TODO: po wciśnięciu przycisku powrotu omijamy proces logowania naprawić!
         if (auth.getCurrentUser() != null) {
             Database.SendUserInfoToDatabase();
+            Database.facebook();
             // already signed in
         } else {
             // not signed in
@@ -177,6 +177,9 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in.
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null) Database.SendUserInfoToDatabase();
+        if (auth.getCurrentUser() != null) {
+            Database.SendUserInfoToDatabase();
+            Database.facebook();
+        }
     }
 }

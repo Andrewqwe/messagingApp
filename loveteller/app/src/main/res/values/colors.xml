@@ -5,4 +5,5 @@
     <color name="colorAccent">#ffff8800</color>
     <color name="transparent">#80000000</color>
     <color name="black">#000</color>
+    <color name="our_chat_color">#B3ECF5</color>
 </resources>

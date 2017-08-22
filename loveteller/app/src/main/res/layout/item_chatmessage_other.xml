@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
-    android:weightSum="1"
+    android:layout_height="wrap_content"
+    android:weightSum="20"
     android:background="?android:selectableItemBackground"
     android:clickable="true"
-    android:gravity="center_horizontal"
+    android:gravity="left"
     android:paddingTop="2dp"
     android:paddingBottom="5dp"
     android:paddingStart="5dp"
@@ -17,20 +16,18 @@
         android:id="@+id/chatProfileImageButton"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:background="@drawable/chat_profile_picture_imageshape"
-        android:layout_alignParentBottom="true" />
+        android:background="@drawable/chat_profile_picture_imageshape" />
     <TextView
+        android:layout_weight="15"
         android:id="@+id/MessageTextView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/chatProfileImageButton"
         android:textColor="@color/black"
-        android:background="@drawable/message_box"
+        android:background="@drawable/message_box_other"
         android:padding="5dp"
         android:text="lololololololololololololololololololol"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_alignParentBottom="true" />
+        android:layout_marginTop="5dp" />
 
-</RelativeLayout>
+</LinearLayout>

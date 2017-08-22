@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="5dp"
-        android:background="@drawable/message_box"
+        android:background="@drawable/message_box_other"
         android:hint="Napisz wiadomosc :)"
         android:imeOptions="actionSend"
         android:inputType="text"

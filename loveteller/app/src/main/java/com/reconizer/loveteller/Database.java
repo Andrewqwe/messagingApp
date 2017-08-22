@@ -1,17 +1,13 @@
 package com.reconizer.loveteller;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.internal.ImageRequest;
-import com.firebase.ui.auth.ui.User;
-import com.google.firebase.auth.FacebookAuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -22,8 +18,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Scanner;
 
 /**
  * Created by Radosław on 2017-08-16.
@@ -138,7 +132,9 @@ public class Database {
                                     object.getString("gender").toString(),
                                     object.getString("age_range").toString(),
                                     GetUserImage().toString(),
-                                    object.getString("id").toString());
+                                    object.getString("id").toString(),
+                                    object.getDouble("latitude"), //DAWID/ szerogość geograficzna
+                                    object.getDouble("longitude")); //DAWID/ długość geograficzna
                             mDatabaseReference.child(GetUserUID()).setValue(user);
                         } catch (JSONException e) {
                             e.printStackTrace();

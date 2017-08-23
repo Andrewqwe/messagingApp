@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.reconizer.loveteller.chat.MainChatFragment;
+import com.reconizer.loveteller.match.MainMatchFragment;
 
 import java.io.Console;
 import java.util.Arrays;

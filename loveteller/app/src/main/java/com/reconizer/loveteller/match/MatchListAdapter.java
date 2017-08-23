@@ -40,8 +40,7 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
 
         });
         User u = matches.get(position);
-        if(!"https://graph.facebook.com/1433953153361963/picture?height=500&width=500&migration_overrides=%7Boctober_2012%3Atrue%7D".equals(u.photo))
-            Picasso.with(context).load(u.photo).into(holder.photo);
+        Picasso.with(context).load(u.photo).into(holder.photo);
         holder.name.setText(u.first_name);
         holder.description.setText("text");
     }

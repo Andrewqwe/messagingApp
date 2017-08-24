@@ -1,6 +1,5 @@
 package com.reconizer.loveteller;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -183,13 +182,5 @@ public class MainActivity extends AppCompatActivity {
             Database.SendUserInfoToDatabase();
             Database.facebook();
         }
-    }
-
-    /*wywolywane po nacisnieciu przycisku ustawienia we fragmencie MainProfileFragment
-    * otwiera activity EditProfileActivity w celu edytowania profilu*/
-    public void profileSettingsOnClick(View v)
-    {
-        Intent intent = new Intent(this, EditProfileActivity.class);
-        startActivity(intent);
     }
 }

@@ -8,12 +8,10 @@ import java.util.ArrayList;
 
 class Conversation {
     private ArrayList<String> usersUID;
-    private Message lastMessage;
     private ArrayList<Message> messages;
 
     public Conversation(ArrayList<String> usersUID, Message lastMessage, ArrayList<Message> messages) {
         this.usersUID = usersUID;
-        this.lastMessage = lastMessage;
         this.messages = messages;
     }
 
@@ -25,13 +23,6 @@ class Conversation {
         this.usersUID = usersUID;
     }
 
-    public Message getLastMessage() {
-        return lastMessage;
-    }
-
-    public void setLastMessage(Message lastMessage) {
-        this.lastMessage = lastMessage;
-    }
 
     public ArrayList<Message> getMessages() {
         return messages;

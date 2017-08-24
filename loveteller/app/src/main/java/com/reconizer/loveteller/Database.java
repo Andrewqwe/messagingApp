@@ -128,14 +128,11 @@ public class Database {
                             com.reconizer.loveteller.User user = new com.reconizer.loveteller.User(
                                     object.getString("first_name").toString(),
                                     object.getString("last_name").toString(),
-                                    object.getString("description").toString(),
                                     object.getString("email").toString(),
                                     object.getString("gender").toString(),
                                     object.getString("age_range").toString(),
                                     GetUserImage().toString(),
-                                    object.getString("id").toString(),
-                                    object.getDouble("latitude"), //DAWID/ szerogość geograficzna
-                                    object.getDouble("longitude")); //DAWID/ długość geograficzna
+                                    object.getString("id").toString());
                             mDatabaseReference.child(GetUserUID()).setValue(user);
                         } catch (JSONException e) {
                             e.printStackTrace();

@@ -35,24 +35,26 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         FirebaseAuth auth = FirebaseAuth.getInstance();  //Radek  //TODO: po wciśnięciu przycisku powrotu omijamy proces logowania naprawić!
         if (auth.getCurrentUser() != null) {
-            Database.SendUserInfoToDatabase();
+            //Database.sendUserInfoToDatabase();
+            Log.e("scoiaLogin",auth.getCurrentUser().toString());
             Database.facebook();
             // already signed in
         } else {
             // not signed in
-            startActivityForResult(
-                    AuthUI.getInstance()
-                            .createSignInIntentBuilder()
-                            .setIsSmartLockEnabled(false)
-                            //.setTheme(R.style.GreenTheme)  //TODO: dodać plik ze stylem i logo do panelu logowania
-                            .setAvailableProviders(
-                                    Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                            new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
-                                            new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
-                            .build(),
-                    RC_SIGN_IN);
-        }
+                startActivityForResult(
+                        AuthUI.getInstance()
+                                .createSignInIntentBuilder()
+                                .setIsSmartLockEnabled(false)
+                                //.setTheme(R.style.GreenTheme)  //TODO: dodać plik ze stylem i logo do panelu logowania
+                                .setAvailableProviders(
+                                        Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                                new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()
+                                                //new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()
+                                        ))
+                                .build(),
+                        RC_SIGN_IN);
 
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final ViewPager pager = (ViewPager) findViewById(R.id.container);
@@ -178,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
         // Check if user is signed in.
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
-            Database.SendUserInfoToDatabase();
+          //  Database.sendUserInfoToDatabase();
             Database.facebook();
         }
     }

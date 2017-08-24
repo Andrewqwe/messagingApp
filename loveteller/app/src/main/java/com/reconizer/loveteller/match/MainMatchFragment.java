@@ -39,7 +39,7 @@ public class MainMatchFragment extends Fragment {
     private ArrayList<User> matchesList = new ArrayList<>();
     private ArrayList<User> usersList = new ArrayList<>();
     private ChildEventListener lChildEventListener;
-
+    private String userInfo[];
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,6 +52,7 @@ public class MainMatchFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         usersList.clear();
+        userInfo = Database.GetUserInfo();
         start = new Location("startLocation");
         end = new Location("endLocation");
         Database.Initialize(true);
@@ -117,8 +118,6 @@ public class MainMatchFragment extends Fragment {
 
     public static MainMatchFragment newInstance(){
         MainMatchFragment f = new MainMatchFragment();
-// https://stackoverflow.com/questions/18413309/how-to-implement-a-viewpager-with-different-fragments-layouts
-// tutorial z ktorego korzystalem
         return f;
     }
 
@@ -129,7 +128,7 @@ public class MainMatchFragment extends Fragment {
         for (User u : usersList) {
                 end.setLatitude(u.latitude);
                 end.setLongitude(u.longitude);
-                if (200 >= start.distanceTo(end)) {
+                if (200 >= start.distanceTo(end) && !u.email.equals(userInfo[1])) {
                     matchesList.add(u);
                 }
         }

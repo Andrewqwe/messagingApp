@@ -1,7 +1,6 @@
 package com.reconizer.loveteller.match;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,7 +59,7 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
             yesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    matchListRow.setBackgroundColor(Color.GREEN);
+                    matchListRow.setBackgroundColor(v.getResources().getColor(R.color.yes_match));
                     //TODO Sprawdzanie czy druga osoba jest zainteresowana i ewentualne tworzenie im chatu
                 }
             });
@@ -68,7 +67,7 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
             noButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    matchListRow.setBackgroundColor(Color.RED);
+                    matchListRow.setBackgroundColor(v.getResources().getColor(R.color.no_match));
                 }
             });
         }

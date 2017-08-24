@@ -52,10 +52,10 @@ public class MainMatchFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         usersList.clear();
-        userInfo = Database.GetUserInfo();
+        userInfo = Database.getUserInfo();
         start = new Location("startLocation");
         end = new Location("endLocation");
-        Database.Initialize(true);
+        Database.initialize(true);
         lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         ls = new LocationListener() {
 
@@ -104,7 +104,7 @@ public class MainMatchFragment extends Fragment {
             public void onCancelled(DatabaseError databaseError) {}
         };
         //Przechodzimy do userów w bazie i ustawiamy utworzonego wcześniej listenera
-        Database.SetLocation(Database.getUsersDirName()).addChildEventListener(lChildEventListener);
+        Database.setLocation(Database.getUsersDirName()).addChildEventListener(lChildEventListener);
         //Tworzymy adapter i przypisujemy go do listview żeby wyswietlac userów
 
         adapter = new MatchListAdapter(matchesList);

@@ -25,17 +25,14 @@ public class User {
         this.photo = photo;
     }
 
-    public User(String first_name,String last_name, String description, String email,String gender,String age, String photo,String facebook_id, double latitude, double longitude) {
+    public User(String first_name,String last_name, String email,String gender,String age, String photo,String facebook_id) {
         this.first_name = first_name;
         this.last_name = last_name;
-        this.description = description;
         this.email = email;
         this.gender = gender;
         this.age = age;
         this.photo = photo;
         this.facebook_id = facebook_id;
-        this.latitude = latitude;
-        this.longitude = longitude;
     }
 }
 

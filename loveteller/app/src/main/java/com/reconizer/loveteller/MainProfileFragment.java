@@ -56,10 +56,12 @@ public class MainProfileFragment extends Fragment {
                     else
                         v_desc.setText("");
 
-                    if(u.gender.equals("male"))
-                        iv_gender.setImageResource(R.drawable.ic_male);
-                    else if(u.gender.equals("female"))
-                        iv_gender.setImageResource(R.drawable.ic_female);
+                    if(u.gender!= null) {
+                        if (u.gender.equals("male"))
+                            iv_gender.setImageResource(R.drawable.ic_male);
+                        else if (u.gender.equals("female"))
+                            iv_gender.setImageResource(R.drawable.ic_female);
+                    }
                 }
 
                 @Override

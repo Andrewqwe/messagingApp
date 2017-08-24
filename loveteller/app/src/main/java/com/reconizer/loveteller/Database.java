@@ -169,9 +169,10 @@ public class Database {
                                     //getUserImage().toString(),// Firebase Ui login photo - miniaturka
                                     (ImageRequest.getProfilePictureUri(object.getString("id"), 500, 500)).toString(), //Zdjęcie z profilu Facebook
                                     object.getString("id").toString()
+                                    //object.getDouble("latitude"), //DAWID/ szerogość geograficzna  //coś się psuje trzeba to ususnąć i wrzucić do nowej metody
+                                    //object.getDouble("longitude") //DAWID/ długość geograficzna
                             );
-                                    //object.getDouble("latitude"), //DAWID/ szerogość geograficzna
-                                    //object.getDouble("longitude")); //DAWID/ długość geograficzna
+
                             Log.e("scoia UID", " UID= "+getUserUID());
 
                             Log.e("scoia facebook", " Token=" + AccessToken.getCurrentAccessToken() + " FirstName=" + object.getString("first_name").toString() + " Email=" + object.getString("email").toString() + " photoUrl=" + (ImageRequest.getProfilePictureUri(object.optString("id"), 500, 500)).toString());

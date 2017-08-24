@@ -124,15 +124,15 @@ public class Database {
                             JSONObject object,
                             GraphResponse response) {
                         // Application code
-                        try {
+                        try {   //TODO: taki catch gdy brakuje tylko jednego argumentu sprawia ze nic nie zostanie pobrane, moze warto zmienic to w przyszłosci // Andrzej
                             com.reconizer.loveteller.User user = new com.reconizer.loveteller.User(
-                                    object.getString("first_name").toString(),
-                                    object.getString("last_name").toString(),
-                                    object.getString("email").toString(),
-                                    object.getString("gender").toString(),
-                                    object.getString("age_range").toString(),
+                                    object.getString("first_name"),
+                                    object.getString("last_name"),
+                                    object.getString("email"),
+                                    object.getString("gender"),
+                                    object.getString("age_range"),
                                     GetUserImage().toString(),
-                                    object.getString("id").toString());
+                                    object.getString("id"));
                             mDatabaseReference.child(GetUserUID()).setValue(user);
                         } catch (JSONException e) {
                             e.printStackTrace();

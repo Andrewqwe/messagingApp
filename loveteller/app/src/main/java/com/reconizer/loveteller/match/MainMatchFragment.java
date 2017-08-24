@@ -1,4 +1,4 @@
-package com.reconizer.loveteller;
+package com.reconizer.loveteller.match;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -9,22 +9,21 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.reconizer.loveteller.Database;
+import com.reconizer.loveteller.R;
+import com.reconizer.loveteller.User;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import static java.lang.Math.*;
 
 /**
  * Created by Andrzej on 2017-08-14.
@@ -32,17 +31,15 @@ import static java.lang.Math.*;
 
 
 public class MainMatchFragment extends Fragment {
-    private TextView tv;
-    private ListView list;
+    private RecyclerView matchesListView;
     private LocationManager lm;
     private LocationListener ls;
-    private double userLatitude;
-    private double userLongitude;
-    private ArrayAdapter<User> adapter;
-    private List<User> matchesList = new ArrayList<>();
-    private List<User> usersList = new ArrayList<>();
+    private Location start, end;
+    private MatchListAdapter adapter;
+    private ArrayList<User> matchesList = new ArrayList<>();
+    private ArrayList<User> usersList = new ArrayList<>();
     private ChildEventListener lChildEventListener;
-
+    private String userInfo[];
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,20 +52,20 @@ public class MainMatchFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         usersList.clear();
-        tv = (TextView) getActivity().findViewById(R.id.location2);
+        userInfo = Database.GetUserInfo();
+        start = new Location("startLocation");
+        end = new Location("endLocation");
         Database.Initialize(true);
         lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         ls = new LocationListener() {
 
             @Override
             public void onLocationChanged(Location location) {
-                userLatitude = location.getLatitude(); // szerokosc geograficzna
-                userLongitude = location.getLongitude(); // dlugosc geograficzna
 
                 //UpdataUserLocationInDatabase(latitude, longitude);
 
-                String locationText = userLatitude + ", " + userLongitude;
-                tv.setText(locationText);
+                start.setLatitude(location.getLatitude());
+                start.setLongitude(location.getLongitude());
                 filter();
             }
             public void onStatusChanged(String provider, int status, Bundle extras) {}
@@ -109,39 +106,31 @@ public class MainMatchFragment extends Fragment {
         //Przechodzimy do userów w bazie i ustawiamy utworzonego wcześniej listenera
         Database.SetLocation(Database.getUsersDirName()).addChildEventListener(lChildEventListener);
         //Tworzymy adapter i przypisujemy go do listview żeby wyswietlac userów
-        adapter = new ArrayAdapter<User>(getActivity(), android.R.layout.simple_list_item_1, matchesList);
-        list = (ListView)getActivity().findViewById(R.id.listMatches);
-        list.setAdapter(adapter);
 
-        //Ustawiamy listenera wykrywającego naciśnięcie jednego z elementów listy i wywołującego odpowiednią metodę
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int pos, long id) {
-                userOnClick(matchesList.get(pos));
-            }
-        });
+        adapter = new MatchListAdapter(matchesList);
+        matchesListView = (RecyclerView)getActivity().findViewById(R.id.matchListView);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        matchesListView.setLayoutManager(mLayoutManager);
+        matchesListView.setItemAnimator(new DefaultItemAnimator());
+        matchesListView.setAdapter(adapter);
     }
 
 
     public static MainMatchFragment newInstance(){
         MainMatchFragment f = new MainMatchFragment();
-// https://stackoverflow.com/questions/18413309/how-to-implement-a-viewpager-with-different-fragments-layouts
-// tutorial z ktorego korzystalem
         return f;
-    }
-
-    private void userOnClick(User user)
-    {
-        //To co się stanie po kliknięciu na innego usera
     }
 
     public void filter() {
         //Czyścimy listę pomocniczą
         matchesList.clear();
-        //Wyświetlamy userów odległych o max 200 jednostek
+        //Wyświetlamy userów odległych o max 200 metrów
         for (User u : usersList) {
-            if(200 >= sqrt(pow(u.latitude - userLatitude, 2) + pow(u.longitude - userLongitude, 2))){
-                matchesList.add(u);
-            }
+                end.setLatitude(u.latitude);
+                end.setLongitude(u.longitude);
+                if (200 >= start.distanceTo(end) && !u.email.equals(userInfo[1])) {
+                    matchesList.add(u);
+                }
         }
         adapter.notifyDataSetChanged();
     }

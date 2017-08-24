@@ -5,4 +5,7 @@
     <color name="colorAccent">#ffff8800</color>
     <color name="transparent">#80000000</color>
     <color name="black">#000</color>
+    <color name="our_chat_color">#B3ECF5</color>
+    <color name="yes_match">#58EE62</color>
+    <color name="no_match">#EE5858</color>
 </resources>

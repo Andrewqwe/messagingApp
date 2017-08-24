@@ -128,6 +128,7 @@ public class Database {
                             com.reconizer.loveteller.User user = new com.reconizer.loveteller.User(
                                     object.getString("first_name").toString(),
                                     object.getString("last_name").toString(),
+                                    object.getString("description").toString(),
                                     object.getString("email").toString(),
                                     object.getString("gender").toString(),
                                     object.getString("age_range").toString(),

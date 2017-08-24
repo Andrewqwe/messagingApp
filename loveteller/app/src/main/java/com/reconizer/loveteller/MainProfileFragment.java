@@ -43,18 +43,21 @@ public class MainProfileFragment extends Fragment {
                     if(u == null)
                         return;
 
-                    if(u.name != null)
+                    //Przestawilem tutaj name na firstname i lastname poniewaz te parametry pobieraja sie z facebooka // Andrzej
+                    if(u.first_name != null && u.last_name != null)
                     {
+                        // koncentruje tutaj imie i nazwisko poniewaz android studio podbowiada zeby nie robic tego w setText()
+                        String name = ( u.first_name + " " + u.last_name);
                         if(u.age != null)
-                            v_name.setText(u.name + ", " + u.age);
+                            v_name.setText(name + ", " + u.age);
                         else
-                            v_name.setText(u.name);
+                            v_name.setText(name);
                     }
 
                     if(u.description != null)
                         v_desc.setText(u.description);
                     else
-                        v_desc.setText("");
+                        v_desc.setText("Ustaw opis w panelu opcji aby inni mogli go zobaczyć");
 
                     if(u.gender!= null) {
                         if (u.gender.equals("male"))

@@ -27,7 +27,7 @@ public class EditProfileActivity extends AppCompatActivity {
         final SeekBar sb_radius = (SeekBar)findViewById(R.id.seekBarEditProfileRadius);
         final TextView tv_radius = (TextView)findViewById(R.id.textViewEditProfileRadius);
 
-        final String uid = Database.GetUserUID();
+        final String uid = Database.getUserUID();
 
         if(uid != null) {
             /*pobieramy z bazy dane profilu uzytkownika i wpisujemy je na ekran*/
@@ -66,7 +66,7 @@ public class EditProfileActivity extends AppCompatActivity {
 //            });
 
             /*przy uruchomieniu aktywnosci czytamy promien z bazy i ustawiamy seek bar na taka wartosc*/
-            Database.SetLocation(Database.getUsersDirName()).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            Database.setLocation(Database.getUsersDirName()).child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     User u = dataSnapshot.getValue(User.class);
@@ -112,7 +112,7 @@ public class EditProfileActivity extends AppCompatActivity {
                         @Override
                         public void onTextChanged(CharSequence s, int start, int before, int count) {
                             if(s.length() != 0)
-                                Database.SetLocation(Database.getUsersDirName()).child(uid).child("description").setValue(s.toString());
+                                Database.setLocation(Database.getUsersDirName()).child(uid).child("description").setValue(s.toString());
                         }
 
                         @Override
@@ -141,7 +141,7 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 tv_radius.setText(progress * 100 + "m");
 
-                Database.SetLocation(Database.getUsersDirName()).child(uid).child("radius").setValue(String.valueOf(progress*100));
+                Database.setLocation(Database.getUsersDirName()).child(uid).child("radius").setValue(String.valueOf(progress*100));
             }
 
             @Override

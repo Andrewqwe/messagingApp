@@ -11,6 +11,7 @@ public class User {
     public String first_name;
     public String last_name;
     public String description;
+    public String radius;
     public String gender;
     public String age;
     public String facebook_id;
@@ -25,7 +26,7 @@ public class User {
         this.photo = photo;
     }
 
-    public User(String first_name,String last_name, String email,String gender,String age, String photo,String facebook_id) {
+    public User(String first_name,String last_name, String email, String gender, String age, String photo,String facebook_id) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.email = email;

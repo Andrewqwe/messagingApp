@@ -32,6 +32,7 @@ public class Database {
     /*nazwy folderow z danymi w bazie*/
     static final private String users_dir = "users";
     static final private String location_dir = "location";
+    static final private String message_dir = "message";
 
     /*funkcje do zwracania nazw katalogow w bazie danych*/
     public static String getUsersDirName() {
@@ -40,6 +41,10 @@ public class Database {
 
     public static String getLocation_dir() {
         return location_dir;
+    }
+
+    public static String getMessage_dir() {
+        return message_dir;
     }
 
     /*funkcje do zwracania sciezek do katalogow uzytkownikow w bazie danych*/
@@ -51,6 +56,10 @@ public class Database {
         return location_dir + "/" + getUserUID();
     }
 
+    public static String getMessagePath() {
+        return message_dir + "/" + getUserUID();
+    }
+
     public static void initialize(boolean persistence) {
         if (mDatabase == null) {
             mDatabase = FirebaseDatabase.getInstance();
@@ -59,13 +68,14 @@ public class Database {
     }
 
     static public DatabaseReference setLocation(String path) {
+        initialize(true);
         mDatabaseReference = mDatabase.getReference().child(path);
         return mDatabaseReference;
     }
 
     /**
      * Metoda prywatna pobierająca z bazy danych dane o zalogowanym użytkowniku
-     *
+     * NIE UZYWAJCIE JUZ PLZZ
      * @return Zwraca tabele stringów gdzie kolejno jest nazwa użytkownika,e-mail,UID lub pustą tabelę gdy użytkownik nie jest zalogowany
      */
     static public String[] getUserInfo() {
@@ -105,32 +115,6 @@ public class Database {
         return null;
     }
 
-    /**
-     * Metoda publiczna tworząca profil użytkownika bazujący na UID. Funkcja pobiera imie(nazwe uzytkownika) i adres e-mail z danych podanych przy rejestracji(logowaniu)
-     * Funkcja nadpisuje profil użytkownika tz nie wypełnienie wszystkich danych będzie skutkować wyczyszczeniem niewypełnionych pól.
-     * Funkcja tworzy obiekt klasy User w trakcie wykonania (dobrze żeby tak pozostało)
-     */
-    static public void sendUserInfoToDatabase() {
-        initialize(true);
-        DatabaseReference users = setLocation(users_dir);
-        users.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.child(getUserUID()).exists()) {
-                    // run some code
-                } else {
-                    String[] details = getUserInfo();
-                    com.reconizer.loveteller.User user = new com.reconizer.loveteller.User(details[0], details[1], getUserImage().toString());
-                    mDatabaseReference.child(getUserUID()).setValue(user);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
 
     static public void sendProfileToDatabase(final User profile) {
         initialize(true);
@@ -150,7 +134,26 @@ public class Database {
         });
     }
 
-    public static void facebook() {
+    static public void sendLocationToDatabase(final Location location) {
+        initialize(true);
+        DatabaseReference users = setLocation(location_dir);
+        users.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.child(getUserUID()).exists()) { //może być problem przy 2 logowaniu.
+                    // run some code
+                    mDatabaseReference.child(getUserUID()).setValue(location); //tymczasowo
+                } else {
+                    mDatabaseReference.child(getUserUID()).setValue(location);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+    }
+
+
+    public static void getFacebookData() {
         GraphRequest request = GraphRequest.newMeRequest(
                 AccessToken.getCurrentAccessToken(),
                 new GraphRequest.GraphJSONObjectCallback() {
@@ -161,24 +164,16 @@ public class Database {
                         // Application code
                         try {
                             com.reconizer.loveteller.User user = new com.reconizer.loveteller.User(
-                                    object.getString("first_name").toString(),
-                                    object.getString("last_name").toString(),
-                                    object.getString("description").toString(),
-                                    object.getString("email").toString(),
-                                    object.getString("gender").toString(),
-                                    object.getString("age_range").toString(),
+                                    object.getString("first_name"),
+                                    object.getString("last_name"),
+                                    object.getString("email"),
+                                    object.getString("gender"),
                                     //getUserImage().toString(),// Firebase Ui login photo - miniaturka
                                     (ImageRequest.getProfilePictureUri(object.getString("id"), 500, 500)).toString(), //Zdjęcie z profilu Facebook
-                                    object.getString("id").toString()
-                                    //object.getDouble("latitude"), //DAWID/ szerogość geograficzna  //coś się psuje trzeba to ususnąć i wrzucić do nowej metody
-                                    //object.getDouble("longitude") //DAWID/ długość geograficzna
+                                    object.getString("id")
                             );
-
                             Log.e("scoia UID", " UID= "+getUserUID());
-
-                            Log.e("scoia facebook", " Token=" + AccessToken.getCurrentAccessToken() + " FirstName=" + object.getString("first_name").toString() + " Email=" + object.getString("email").toString() + " photoUrl=" + (ImageRequest.getProfilePictureUri(object.optString("id"), 500, 500)).toString());
-                            //Database.initialize(false); //tymczasowo
-                           // mDatabaseReference.child(getUserUID()).setValue(user); //niebezpieczna metoda
+                            Log.e("scoia facebook", " Token=" + AccessToken.getCurrentAccessToken() + " FirstName=" + object.getString("first_name") + " Email=" + object.getString("email") + " photoUrl=" + (ImageRequest.getProfilePictureUri(object.optString("id"), 500, 500)).toString());
                             sendProfileToDatabase(user); //zabezpieczona przed brakiem połączenia z baza danych
                         } catch (JSONException e) {
                             e.printStackTrace();

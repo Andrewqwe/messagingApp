@@ -19,6 +19,9 @@ import android.widget.ImageButton;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.reconizer.loveteller.chat.MainChatFragment;
 import com.reconizer.loveteller.match.MainMatchFragment;
 
@@ -37,9 +40,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         FirebaseAuth auth = FirebaseAuth.getInstance();  //Radek  //TODO: po wciśnięciu przycisku powrotu omijamy proces logowania naprawić!
         if (auth.getCurrentUser() != null) {
-            //Database.sendUserInfoToDatabase();
-            Log.e("scoiaLogin",auth.getCurrentUser().toString());
-            Database.facebook();
             // already signed in
         } else {
             // not signed in
@@ -49,9 +49,8 @@ public class MainActivity extends AppCompatActivity {
                                 .setIsSmartLockEnabled(false)
                                 //.setTheme(R.style.GreenTheme)  //TODO: dodać plik ze stylem i logo do panelu logowania
                                 .setAvailableProviders(
-                                        Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                                new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()
-                                                //new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()
+                                        Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
+                                                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build()
                                         ))
                                 .build(),
                         RC_SIGN_IN);
@@ -182,8 +181,23 @@ public class MainActivity extends AppCompatActivity {
         // Check if user is signed in.
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
-          //  Database.sendUserInfoToDatabase();
-            Database.facebook();
+           // Log.e("scoiaLogin","Co tu sie wyprawilov22222");
+            Database.setLocation(Database.getUsersDirName()).child(Database.getUserUID()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    if (snapshot.getValue() != null) {
+                        //user exists, do something
+                        Log.e("scoiaLogin","Już jest");
+                    } else {
+                        Log.e("scoiaLogin","Jeszcze nie ma");
+                        Database.getFacebookData();
+                        //user does not exist, do something else
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError){
+                }
+            });
         }
     }
 
@@ -191,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
     * otwiera activity EditProfileActivity w celu edytowania profilu*/
     public void profileSettingsOnClick(View v)
     {
+        //Database.sendLocationToDatabase(new Location(24,33)); //Pierwsze dodanie lokacji.
         Intent intent = new Intent(this, EditProfileActivity.class);
         startActivity(intent);
     }

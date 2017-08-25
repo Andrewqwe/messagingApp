@@ -181,8 +181,9 @@ public class MainActivity extends AppCompatActivity {
         // Check if user is signed in.
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
+
            // Log.e("scoiaLogin","Co tu sie wyprawilov22222");
-            Database.setLocation(Database.getUsersDirName()).child(Database.getUserUID()).addValueEventListener(new ValueEventListener() {
+            Database.setLocation(Database.getUsersDirName()).child(Database.getUserUID()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     if (snapshot.getValue() != null) {

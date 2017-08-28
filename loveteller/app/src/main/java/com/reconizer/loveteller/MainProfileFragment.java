@@ -31,11 +31,11 @@ public class MainProfileFragment extends Fragment {
         final TextView v_desc = (TextView)myFragmentView.findViewById(R.id.textViewProfileDesc);
         final ImageView iv_gender = (ImageView)myFragmentView.findViewById(R.id.imageViewProfileGender);
 
-        final String uid = Database.GetUserUID();
+        final String uid = Database.getUserUID();
 
         if(uid != null)
             /*pobieramy z bazy dane profilu uzytkownika i wpisujemy je na ekran*/
-            Database.SetLocation(Database.getUsersDirName()).child(uid).addValueEventListener(new ValueEventListener() {
+            Database.setLocation(Database.getUsersDirName()).child(uid).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     User u = dataSnapshot.getValue(User.class);

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -18,12 +19,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_margin="5dp"
         android:background="@drawable/message_box_other"
         android:hint="Napisz wiadomosc :)"
         android:imeOptions="actionSend"
         android:inputType="text"
         android:maxLines="1"
         android:padding="5dp"
-        />
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toStartOf="@+id/imageButton2" />
+
+    <ImageButton
+        android:id="@+id/imageButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:background="@color/colorPrimary"
+        android:paddingEnd="5dp"
+        app:srcCompat="@drawable/ic_send_black_24dp"
+        android:layout_alignBottom="@+id/messageTextWritingBox"
+        android:layout_alignTop="@+id/messageTextWritingBox" />
 </RelativeLayout>

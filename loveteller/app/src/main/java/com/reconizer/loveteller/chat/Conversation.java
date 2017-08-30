@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by Damian on 15.08.2017.
  */
 
-class Conversation {
+public class Conversation {
     private ArrayList<String> usersUID;
     private ArrayList<Message> messages;
 

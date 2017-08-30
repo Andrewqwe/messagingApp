@@ -100,7 +100,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     else
                         r = 0;
 
-                    sb_radius.setProgress(r / 100);
+                    sb_radius.setProgress(r / 50);
                     tv_radius.setText(r + "m");
 
                     et_desc.addTextChangedListener(new TextWatcher() {
@@ -139,9 +139,9 @@ public class EditProfileActivity extends AppCompatActivity {
         sb_radius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tv_radius.setText(progress * 100 + "m");
+                tv_radius.setText(progress * 50 + "m");
 
-                Database.setLocation(Database.getUsersDirName()).child(uid).child("radius").setValue(String.valueOf(progress*100));
+                Database.setLocation(Database.getUsersDirName()).child(uid).child("radius").setValue(String.valueOf(progress*50));
             }
 
             @Override

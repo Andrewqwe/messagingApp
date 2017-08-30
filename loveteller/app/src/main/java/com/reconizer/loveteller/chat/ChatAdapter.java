@@ -17,6 +17,15 @@ import java.util.List;
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {
 
     private List<Message> messageList;
+    private int myNumber;
+
+    public int getMyNumber() {
+        return myNumber;
+    }
+
+    public void setMyNumber(int myNumber) {
+        this.myNumber = myNumber;
+    }
 
     public ChatAdapter(List<Message> messageList) {
         this.messageList = messageList;
@@ -25,7 +34,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     @Override
     public ChatAdapter.ChatViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView;
-        if(viewType==1){
+        if(viewType==myNumber){
         itemView = LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.item_chatmessage_mine,parent,false);}
@@ -40,7 +49,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     @Override
     public int getItemViewType(int position) {
         //return super.getItemViewType(position);
-        return position %2; //tutaj wybieramy czyja to wiadomosc
+        return messageList.get(position).getOwner(); //tutaj wybieramy czyja to wiadomosc
     }
 
     @Override
@@ -54,7 +63,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         return messageList.size();
     }
 
+    public void addMessage(Message message){
+        messageList.add(message);
+        notifyItemInserted(messageList.size());
+    }
+
     public class ChatViewHolder extends RecyclerView.ViewHolder {
+
         public TextView messageText;
         public ChatViewHolder(View itemView) {
             super(itemView);

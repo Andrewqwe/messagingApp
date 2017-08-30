@@ -12,10 +12,10 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        android:layout_above="@+id/messageTextWritingBox" />
+        android:layout_above="@+id/chatTextWritingBox" />
 
     <EditText
-        android:id="@+id/messageTextWritingBox"
+        android:id="@+id/chatTextWritingBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -29,16 +29,16 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_toStartOf="@+id/imageButton2" />
+        android:layout_toStartOf="@+id/chatMessageSendButton" />
 
     <ImageButton
-        android:id="@+id/imageButton2"
+        android:id="@+id/chatMessageSendButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:background="@color/colorPrimary"
         android:paddingEnd="5dp"
         app:srcCompat="@drawable/ic_send_black_24dp"
-        android:layout_alignBottom="@+id/messageTextWritingBox"
-        android:layout_alignTop="@+id/messageTextWritingBox" />
+        android:layout_alignBottom="@+id/chatTextWritingBox"
+        android:layout_alignTop="@+id/chatTextWritingBox" />
 </RelativeLayout>

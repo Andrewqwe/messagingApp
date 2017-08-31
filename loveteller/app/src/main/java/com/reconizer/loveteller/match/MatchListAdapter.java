@@ -16,6 +16,8 @@ import com.google.firebase.database.DatabaseError;
 import com.reconizer.loveteller.Database;
 import com.reconizer.loveteller.R;
 import com.reconizer.loveteller.User;
+import com.reconizer.loveteller.chat.Conversation;
+import com.reconizer.loveteller.chat.Message;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -105,8 +107,14 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
 
                             for(MatchesList mlist2 : myMatchesList) {
                                 if (mlist2.mid.equals(mid)) {
-                                    if (mlist2.list.contains(Database.getUserUID()));
-                                    //sendChatToDatabase
+                                    if (mlist2.list.contains(Database.getUserUID())) {
+                                        ArrayList<String> userUID = new ArrayList<>();
+                                        ArrayList<Message> messages = new ArrayList<>();
+                                        userUID.add(mlist1.mid);
+                                        userUID.add(mlist2.mid);
+                                        Conversation conversation = new Conversation(userUID, messages);
+                                        Database.sendConversationToDatabase(conversation, mlist2.mid);
+                                    }
                                 }
                             }
                             Database.sendMatchToDatabase(mlist1);

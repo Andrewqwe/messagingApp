@@ -5,6 +5,7 @@ package com.reconizer.loveteller;
  */
 
 public class User {
+    public String uid;
     public String name;
     public String email;
     public String photo;
@@ -15,8 +16,6 @@ public class User {
     public String gender;
     public String age;
     public String facebook_id;
-    public double latitude;  // Te pola są do usunięcia z użytkownika i do wrzucenia w Location.
-    public double longitude;
 
     public User() {}
 
@@ -25,7 +24,6 @@ public class User {
         this.name = name;
         this.photo = photo;
     }
-
 
     public User(String first_name,String last_name, String email,String gender, String photo,String facebook_id) {
         this.first_name = first_name;

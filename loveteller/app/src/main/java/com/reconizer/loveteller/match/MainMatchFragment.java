@@ -15,10 +15,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.reconizer.loveteller.Coordinates;
 import com.reconizer.loveteller.Database;
 import com.reconizer.loveteller.R;
 import com.reconizer.loveteller.User;
@@ -32,14 +34,15 @@ import java.util.ArrayList;
 
 public class MainMatchFragment extends Fragment {
     private RecyclerView matchesListView;
+    private TextView emptyView;
     private LocationManager lm;
     private LocationListener ls;
     private Location start, end;
     private MatchListAdapter adapter;
     private ArrayList<User> matchesList = new ArrayList<>();
+    private ArrayList<Coordinates> coordinatesList = new ArrayList<>();
     private ArrayList<User> usersList = new ArrayList<>();
-    private ChildEventListener lChildEventListener;
-    private String userInfo[];
+    private ChildEventListener lChildEventListener, uChildEventListener;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,18 +54,26 @@ public class MainMatchFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        matchesListView = (RecyclerView)getActivity().findViewById(R.id.matchListView);
+        emptyView = (TextView)getActivity().findViewById(R.id.emptyView);
+
+        coordinatesList.clear();
         usersList.clear();
-        userInfo = Database.getUserInfo();
+
         start = new Location("startLocation");
         end = new Location("endLocation");
         Database.initialize(true);
+
+        //Pobieranie lokalizacji usera
         lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         ls = new LocationListener() {
 
             @Override
             public void onLocationChanged(Location location) {
 
-                //UpdataUserLocationInDatabase(latitude, longitude);
+                Coordinates c = new Coordinates(Database.getUserUID(), location.getLatitude(), location.getLongitude());
+                Database.sendLocationToDatabase(c);
 
                 start.setLatitude(location.getLatitude());
                 start.setLongitude(location.getLongitude());
@@ -75,25 +86,25 @@ public class MainMatchFragment extends Fragment {
         if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, ls);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, ls); //Aktualizowanie co jeden metr
 
+        //Listener do pobrania listy lokalizacji z bazy
         lChildEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s)
             {
-                User user = dataSnapshot.getValue(User.class);
-                //user.setUid(dataSnapshot.getKey());
-                usersList.add(user);
+                Coordinates c = dataSnapshot.getValue(Coordinates.class);
+                coordinatesList.add(c);
                 filter();
             }
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                User user = dataSnapshot.getValue(User.class);
-                for(int i = 0; i < usersList.size(); i++)
+                Coordinates c = dataSnapshot.getValue(Coordinates.class);
+                for(int i = 0; i < coordinatesList.size(); i++)
                 {
-                    if(usersList.get(i).email.equals(user.email))
+                    if(coordinatesList.get(i).cid.equals(c.cid))
                     {
-                        usersList.remove(i);
-                        usersList.add(user);
+                        coordinatesList.remove(i);
+                        coordinatesList.add(c);
                         filter();
                         break;
                     }
@@ -103,12 +114,37 @@ public class MainMatchFragment extends Fragment {
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
             public void onCancelled(DatabaseError databaseError) {}
         };
-        //Przechodzimy do userów w bazie i ustawiamy utworzonego wcześniej listenera
-        Database.setLocation(Database.getUsersDirName()).addChildEventListener(lChildEventListener);
-        //Tworzymy adapter i przypisujemy go do listview żeby wyswietlac userów
+        Database.setLocation(Database.getLocation_dir()).addChildEventListener(lChildEventListener);
 
+        //Listener do pobrania userów z bazy
+        uChildEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s)
+            {
+                User u = dataSnapshot.getValue(User.class);
+                u.uid = dataSnapshot.getKey();
+                usersList.add(u);
+            }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                User u = dataSnapshot.getValue(User.class);
+                for(int i = 0; i < usersList.size(); i++)
+                {
+                    if(usersList.get(i).email.equals(u.email))
+                    {
+                        usersList.remove(i);
+                        usersList.add(u);
+                        break;
+                    }
+                }
+            }
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+            public void onCancelled(DatabaseError databaseError) {}
+        };
+        Database.setLocation(Database.getUsersDirName()).addChildEventListener(uChildEventListener);
+
+        //Wrzucamy do matchListView userów w zasięgu
         adapter = new MatchListAdapter(matchesList);
-        matchesListView = (RecyclerView)getActivity().findViewById(R.id.matchListView);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         matchesListView.setLayoutManager(mLayoutManager);
         matchesListView.setItemAnimator(new DefaultItemAnimator());
@@ -121,18 +157,32 @@ public class MainMatchFragment extends Fragment {
         return f;
     }
 
+    //Funkcja szukająca userów w zasięgu
     public void filter() {
         //Czyścimy listę pomocniczą
         matchesList.clear();
-        //Wyświetlamy userów odległych o max 200 metrów
-        for (User u : usersList) {
-                end.setLatitude(u.latitude);
-                end.setLongitude(u.longitude);
-                if (200 >= start.distanceTo(end) && !u.email.equals(userInfo[1])) {
-                    matchesList.add(u);
+        for (Coordinates c : coordinatesList) {
+            end.setLatitude(c.latitude);
+            end.setLongitude(c.longitude);
+            if (1000 >= start.distanceTo(end) && c.cid != null) {
+                if(!c.cid.equals(Database.getUserUID())) {
+                    for (User u : usersList) {
+                        if(u.uid.equals(c.cid))
+                            matchesList.add(u);
+                    }
                 }
+            }
         }
         adapter.notifyDataSetChanged();
+
+        //Jeśli user ma wyłączoną lokalizację wyświetlamy TextView z informacją o oczekiwaniu
+        if (start.getLatitude() == 0 && start.getLongitude() == 0) {
+            matchesListView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+        else {
+            matchesListView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
     }
 }
-

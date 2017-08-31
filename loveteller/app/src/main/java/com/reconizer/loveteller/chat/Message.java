@@ -28,4 +28,12 @@ class Message {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    public Message() {
+    }
+
+    @Override
+    public String toString() {
+        return this.message;
+    }
 }

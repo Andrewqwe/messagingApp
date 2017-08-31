@@ -4,16 +4,20 @@ package com.reconizer.loveteller;
  * Created by Radosław on 2017-08-21.
  */
 
-public class Location {
+public class Coordinates {
 
+    public String cid;
     public double latitude;
     public double longitude;
 
-    public Location(){}
+    public Coordinates(){}
 
-    public Location(double latitude, double longitude){
+    public Coordinates(String cid, double latitude, double longitude){
+        this.cid = cid;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
 }
+
+

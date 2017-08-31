@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.reconizer.loveteller.match.MatchesList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +34,7 @@ public class Database {
     static final private String users_dir = "users";
     static final private String location_dir = "location";
     static final private String message_dir = "message";
+    static final private String match_dir = "match";
 
     /*funkcje do zwracania nazw katalogow w bazie danych*/
     public static String getUsersDirName() {
@@ -47,6 +49,10 @@ public class Database {
         return message_dir;
     }
 
+    public static String getMatch_dir() {
+        return match_dir;
+    }
+
     /*funkcje do zwracania sciezek do katalogow uzytkownikow w bazie danych*/
     public static String getProfilePath() {
         return users_dir + "/" + getUserUID();
@@ -58,6 +64,10 @@ public class Database {
 
     public static String getMessagePath() {
         return message_dir + "/" + getUserUID();
+    }
+
+    public static String getMatchPath() {
+        return match_dir + "/" + getUserUID();
     }
 
     public static void initialize(boolean persistence) {
@@ -134,7 +144,7 @@ public class Database {
         });
     }
 
-    static public void sendLocationToDatabase(final Location location) {
+    static public void sendLocationToDatabase(final Coordinates coordinates) {
         initialize(true);
         DatabaseReference users = setLocation(location_dir);
         users.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -142,9 +152,9 @@ public class Database {
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.child(getUserUID()).exists()) { //może być problem przy 2 logowaniu.
                     // run some code
-                    mDatabaseReference.child(getUserUID()).setValue(location); //tymczasowo
+                    mDatabaseReference.child(getUserUID()).setValue(coordinates); //tymczasowo
                 } else {
-                    mDatabaseReference.child(getUserUID()).setValue(location);
+                    mDatabaseReference.child(getUserUID()).setValue(coordinates);
                 }
             }
             @Override
@@ -185,4 +195,25 @@ public class Database {
         request.setParameters(parameters);
         request.executeAsync();
     }
+
+    static public void sendMatchToDatabase(final MatchesList matchesList) {
+        initialize(true);
+        DatabaseReference users = setLocation(match_dir);
+        users.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.child(getUserUID()).exists()) {
+                    mDatabaseReference.child(getUserUID()).setValue(matchesList);
+                } else {
+                    mDatabaseReference.child(getUserUID()).setValue(matchesList);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+    }
+
+
+
+
 }

@@ -60,8 +60,8 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
             public void onCancelled(DatabaseError databaseError) {}
         };
-        Database.setLocation(Database.getMatch_dir()).addChildEventListener(mChildEventListener);
-        Database.setLocation(Database.getLocation_dir());
+        Database.setLocation(Database.getMatchDir()).addChildEventListener(mChildEventListener);
+        Database.setLocation(Database.getLocationDir());
 
         return new MatchListAdapter.MyViewHolder(itemView);
     }

@@ -114,7 +114,7 @@ public class MainMatchFragment extends Fragment {
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
             public void onCancelled(DatabaseError databaseError) {}
         };
-        Database.setLocation(Database.getLocation_dir()).addChildEventListener(lChildEventListener);
+        Database.setLocation(Database.getLocationDir()).addChildEventListener(lChildEventListener);
 
         //Listener do pobrania userów z bazy
         uChildEventListener = new ChildEventListener() {

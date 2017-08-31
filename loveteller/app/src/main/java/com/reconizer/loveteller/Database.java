@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.reconizer.loveteller.chat.Conversation;
 import com.reconizer.loveteller.match.MatchesList;
 
 import org.json.JSONException;
@@ -31,43 +32,52 @@ public class Database {
     static private DatabaseReference mDatabaseReference;
 
     /*nazwy folderow z danymi w bazie*/
-    static final private String users_dir = "users";
-    static final private String location_dir = "location";
-    static final private String message_dir = "message";
-    static final private String match_dir = "match";
+    static final private String USERS_DIR = "users";
+    static final private String LOCATION_DIR = "location";
+    static final private String MESSAGE_DIR = "message";
+    static final private String CONVERSATION_DIR = "message";
+    static final private String MATCH_DIR = "match";
 
     /*funkcje do zwracania nazw katalogow w bazie danych*/
     public static String getUsersDirName() {
-        return users_dir;
+        return USERS_DIR;
     }
 
-    public static String getLocation_dir() {
-        return location_dir;
+    public static String getLocationDir() {
+        return LOCATION_DIR;
     }
 
-    public static String getMessage_dir() {
-        return message_dir;
+    public static String getMessageDir() {
+        return MESSAGE_DIR;
     }
 
-    public static String getMatch_dir() {
-        return match_dir;
+    public static String getConversationDir() {
+        return CONVERSATION_DIR;
+    }
+
+    public static String getMatchDir() {
+        return MATCH_DIR;
     }
 
     /*funkcje do zwracania sciezek do katalogow uzytkownikow w bazie danych*/
     public static String getProfilePath() {
-        return users_dir + "/" + getUserUID();
+        return USERS_DIR + "/" + getUserUID();
     }
 
     public static String getLocationPath() {
-        return location_dir + "/" + getUserUID();
+        return LOCATION_DIR + "/" + getUserUID();
     }
 
     public static String getMessagePath() {
-        return message_dir + "/" + getUserUID();
+        return MESSAGE_DIR + "/" + getUserUID();
+    }
+
+    public static String getConversationPath() {
+        return CONVERSATION_DIR + "/" + getUserUID();
     }
 
     public static String getMatchPath() {
-        return match_dir + "/" + getUserUID();
+        return MATCH_DIR + "/" + getUserUID();
     }
 
     public static void initialize(boolean persistence) {
@@ -128,7 +138,7 @@ public class Database {
 
     static public void sendProfileToDatabase(final User profile) {
         initialize(true);
-        DatabaseReference users = setLocation(users_dir);
+        DatabaseReference users = setLocation(USERS_DIR);
         users.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -146,7 +156,7 @@ public class Database {
 
     static public void sendLocationToDatabase(final Coordinates coordinates) {
         initialize(true);
-        DatabaseReference users = setLocation(location_dir);
+        DatabaseReference users = setLocation(LOCATION_DIR);
         users.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -162,6 +172,40 @@ public class Database {
         });
     }
 
+    static public void sendConversationToDatabase(final Conversation conversation) {
+        initialize(true);
+        DatabaseReference users = setLocation(CONVERSATION_DIR);
+        users.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.child(getUserUID()).exists()) { //może być problem przy 2 logowaniu.
+                    // run some code
+                    mDatabaseReference.child(getUserUID()).setValue(conversation); //tymczasowo
+                } else {
+                    mDatabaseReference.child(getUserUID()).setValue(conversation);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+    }
+
+    static public void sendMatchToDatabase(final MatchesList matchesList) {
+        initialize(true);
+        DatabaseReference users = setLocation(MATCH_DIR);
+        users.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.child(getUserUID()).exists()) {
+                    mDatabaseReference.child(getUserUID()).setValue(matchesList);
+                } else {
+                    mDatabaseReference.child(getUserUID()).setValue(matchesList);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+    }
 
     public static void getFacebookData() {
         GraphRequest request = GraphRequest.newMeRequest(
@@ -195,25 +239,6 @@ public class Database {
         request.setParameters(parameters);
         request.executeAsync();
     }
-
-    static public void sendMatchToDatabase(final MatchesList matchesList) {
-        initialize(true);
-        DatabaseReference users = setLocation(match_dir);
-        users.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.child(getUserUID()).exists()) {
-                    mDatabaseReference.child(getUserUID()).setValue(matchesList);
-                } else {
-                    mDatabaseReference.child(getUserUID()).setValue(matchesList);
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) { }
-        });
-    }
-
-
 
 
 }

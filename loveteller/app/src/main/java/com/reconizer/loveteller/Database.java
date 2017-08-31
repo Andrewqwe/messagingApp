@@ -29,13 +29,13 @@ public class Database {
 
     //Firebase instance variables
     static private FirebaseDatabase mDatabase;
-    static private DatabaseReference mDatabaseReference;
+    //static private DatabaseReference mDatabaseReference;
 
     /*nazwy folderow z danymi w bazie*/
     static final private String USERS_DIR = "users";
     static final private String LOCATION_DIR = "location";
     static final private String MESSAGE_DIR = "message";
-    static final private String CONVERSATION_DIR = "message";
+    static final private String CONVERSATION_DIR = "conversation";
     static final private String MATCH_DIR = "match";
 
     /*funkcje do zwracania nazw katalogow w bazie danych*/
@@ -89,7 +89,7 @@ public class Database {
 
     static public DatabaseReference setLocation(String path) {
         initialize(true);
-        mDatabaseReference = mDatabase.getReference().child(path);
+        DatabaseReference mDatabaseReference = mDatabase.getReference().child(path);
         return mDatabaseReference;
     }
 
@@ -138,15 +138,15 @@ public class Database {
 
     static public void sendProfileToDatabase(final User profile) {
         initialize(true);
-        DatabaseReference users = setLocation(USERS_DIR);
+        final DatabaseReference users = setLocation(USERS_DIR);
         users.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.child(getUserUID()).exists()) { //może być problem przy 2 logowaniu.
                     // run some code
-                    mDatabaseReference.child(getUserUID()).setValue(profile); //tymczasowo
+                    users.child(getUserUID()).setValue(profile); //tymczasowo
                 } else {
-                    mDatabaseReference.child(getUserUID()).setValue(profile);
+                    users.child(getUserUID()).setValue(profile);
                 }
             }
             @Override
@@ -156,15 +156,15 @@ public class Database {
 
     static public void sendLocationToDatabase(final Coordinates coordinates) {
         initialize(true);
-        DatabaseReference users = setLocation(LOCATION_DIR);
-        users.addListenerForSingleValueEvent(new ValueEventListener() {
+        final DatabaseReference location = setLocation(LOCATION_DIR);
+        location.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.child(getUserUID()).exists()) { //może być problem przy 2 logowaniu.
                     // run some code
-                    mDatabaseReference.child(getUserUID()).setValue(coordinates); //tymczasowo
+                    location.child(getUserUID()).setValue(coordinates); //tymczasowo
                 } else {
-                    mDatabaseReference.child(getUserUID()).setValue(coordinates);
+                    location.child(getUserUID()).setValue(coordinates);
                 }
             }
             @Override
@@ -172,17 +172,23 @@ public class Database {
         });
     }
 
-    static public void sendConversationToDatabase(final Conversation conversation) {
+    static public void sendConversationToDatabase(final Conversation conversation, final String UID) {
         initialize(true);
-        DatabaseReference users = setLocation(CONVERSATION_DIR);
-        users.addListenerForSingleValueEvent(new ValueEventListener() {
+        final DatabaseReference conversations = setLocation(CONVERSATION_DIR);
+        conversations.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.child(getUserUID()).exists()) { //może być problem przy 2 logowaniu.
                     // run some code
-                    mDatabaseReference.child(getUserUID()).setValue(conversation); //tymczasowo
+                    conversations.child(getUserUID()).push().setValue(conversation); //tymczasowo
                 } else {
-                    mDatabaseReference.child(getUserUID()).setValue(conversation);
+                    conversations.child(getUserUID()).push().setValue(conversation);
+                }
+                if (snapshot.child(UID).exists()) { //może być problem przy 2 logowaniu.
+                    // run some code
+                    conversations.child(UID).push().setValue(conversation); //tymczasowo
+                } else {
+                    conversations.child(UID).push().setValue(conversation);
                 }
             }
             @Override
@@ -192,14 +198,14 @@ public class Database {
 
     static public void sendMatchToDatabase(final MatchesList matchesList) {
         initialize(true);
-        DatabaseReference users = setLocation(MATCH_DIR);
-        users.addListenerForSingleValueEvent(new ValueEventListener() {
+        final DatabaseReference match = setLocation(MATCH_DIR);
+        match.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.child(getUserUID()).exists()) {
-                    mDatabaseReference.child(getUserUID()).setValue(matchesList);
+                    match.child(getUserUID()).setValue(matchesList);
                 } else {
-                    mDatabaseReference.child(getUserUID()).setValue(matchesList);
+                    match.child(getUserUID()).setValue(matchesList);
                 }
             }
             @Override

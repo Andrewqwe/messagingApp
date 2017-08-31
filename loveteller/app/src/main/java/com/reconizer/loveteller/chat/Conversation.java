@@ -10,7 +10,7 @@ public class Conversation {
     private ArrayList<String> usersUID;
     private ArrayList<Message> messages;
 
-    public Conversation(ArrayList<String> usersUID, Message lastMessage, ArrayList<Message> messages) {
+    public Conversation(ArrayList<String> usersUID, ArrayList<Message> messages) {
         this.usersUID = usersUID;
         this.messages = messages;
     }

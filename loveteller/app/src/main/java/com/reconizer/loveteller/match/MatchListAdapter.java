@@ -10,6 +10,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.reconizer.loveteller.Database;
 import com.reconizer.loveteller.R;
 import com.reconizer.loveteller.User;
 import com.squareup.picasso.Picasso;
@@ -23,20 +27,53 @@ import java.util.ArrayList;
 public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyViewHolder> {
     private ArrayList<User> matches;
     private Context context;
+    private ChildEventListener mChildEventListener;
+    private ArrayList<MatchesList> myMatchesList = new ArrayList<>();
 
     @Override
     public MatchListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
         View itemView = LayoutInflater.from(context).inflate(R.layout.match_list_row, parent, false);
+
+        //Listener do pobierania matchy userów
+        mChildEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s)
+            {
+                MatchesList ml = dataSnapshot.getValue(MatchesList.class);
+                ml.mid = dataSnapshot.getKey();
+                myMatchesList.add(ml);
+            }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                MatchesList ml = dataSnapshot.getValue(MatchesList.class);
+                for(int i = 0; i < myMatchesList.size(); i++)
+                {
+                    if(myMatchesList.get(i).mid.equals(ml.mid))
+                    {
+                        myMatchesList.remove(i);
+                        myMatchesList.add(ml);
+                        break;
+                    }
+                }
+            }
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+            public void onCancelled(DatabaseError databaseError) {}
+        };
+        Database.setLocation(Database.getMatch_dir()).addChildEventListener(mChildEventListener);
+        Database.setLocation(Database.getLocation_dir());
+
         return new MatchListAdapter.MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(MatchListAdapter.MyViewHolder holder, int position) {
+
         User u = matches.get(position);
         Picasso.with(context).load(u.photo).into(holder.photo);
         holder.name.setText(u.first_name);
-        holder.description.setText("linia1\nlinia2");
+        holder.description.setText(u.description);
+        holder.mid = u.uid;
     }
 
     @Override
@@ -48,6 +85,7 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
         private ImageView photo;
         private TextView name;
         private TextView description;
+        private String mid;
         private RelativeLayout matchListRow;
         MyViewHolder(View view) {
             super(view);
@@ -55,19 +93,40 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
             photo = (ImageView) view.findViewById(R.id.photo);
             name = (TextView) view.findViewById(R.id.name);
             description = (TextView) view.findViewById(R.id.description);
-            ImageButton yesButton = (ImageButton) view.findViewById(R.id.yesButton);
+            ImageButton yesButton = (ImageButton) view.findViewById(R.id.yesButton); //Zaakceptowanie usera
             yesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     matchListRow.setBackgroundColor(v.getResources().getColor(R.color.yes_match));
-                    //TODO Sprawdzanie czy druga osoba jest zainteresowana i ewentualne tworzenie im chatu
+                    for(MatchesList mlist1 : myMatchesList) {
+                        if(mlist1.mid.equals(Database.getUserUID())) {
+                            if(mlist1.list == null) mlist1.list = mid + " ";
+                            else if(!mlist1.list.contains(mid)) mlist1.list += mid + " ";
+
+                            for(MatchesList mlist2 : myMatchesList) {
+                                if (mlist2.mid.equals(mid)) {
+                                    if (mlist2.list.contains(Database.getUserUID()));
+                                    //sendChatToDatabase
+                                }
+                            }
+                            Database.sendMatchToDatabase(mlist1);
+                        }
+                    }
                 }
             });
-            ImageButton noButton = (ImageButton) view.findViewById(R.id.noButton);
+            ImageButton noButton = (ImageButton) view.findViewById(R.id.noButton); //Odrzucenie usera
             noButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     matchListRow.setBackgroundColor(v.getResources().getColor(R.color.no_match));
+                    for(MatchesList ml : myMatchesList) {
+                        if(ml.mid.equals(Database.getUserUID())) {
+                            if(ml.list != null) {
+                                ml.list = ml.list.replaceAll(mid + " ", "");
+                                Database.sendMatchToDatabase(ml);
+                            }
+                        }
+                    }
                 }
             });
         }

@@ -36,7 +36,7 @@ public class Database {
     static final private String LOCATION_DIR = "location";
     static final private String MESSAGE_DIR = "message";
     static final private String CONVERSATION_DIR = "message";
-    static final private String match_dir = "match";
+    static final private String MATCH_DIR = "match";
 
     /*funkcje do zwracania nazw katalogow w bazie danych*/
     public static String getUsersDirName() {
@@ -55,8 +55,8 @@ public class Database {
         return CONVERSATION_DIR;
     }
 
-    public static String getMatch_dir() {
-        return match_dir;
+    public static String getMatchDir() {
+        return MATCH_DIR;
     }
 
     /*funkcje do zwracania sciezek do katalogow uzytkownikow w bazie danych*/
@@ -73,11 +73,11 @@ public class Database {
     }
 
     public static String getConversationPath() {
-        return MESSAGE_DIR + "/" + getUserUID();
+        return CONVERSATION_DIR + "/" + getUserUID();
     }
 
     public static String getMatchPath() {
-        return match_dir + "/" + getUserUID();
+        return MATCH_DIR + "/" + getUserUID();
     }
 
     public static void initialize(boolean persistence) {
@@ -190,6 +190,23 @@ public class Database {
         });
     }
 
+    static public void sendMatchToDatabase(final MatchesList matchesList) {
+        initialize(true);
+        DatabaseReference users = setLocation(MATCH_DIR);
+        users.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.child(getUserUID()).exists()) {
+                    mDatabaseReference.child(getUserUID()).setValue(matchesList);
+                } else {
+                    mDatabaseReference.child(getUserUID()).setValue(matchesList);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+    }
+
     public static void getFacebookData() {
         GraphRequest request = GraphRequest.newMeRequest(
                 AccessToken.getCurrentAccessToken(),
@@ -223,20 +240,5 @@ public class Database {
         request.executeAsync();
     }
 
-    static public void sendMatchToDatabase(final MatchesList matchesList) {
-        initialize(true);
-        DatabaseReference users = setLocation(match_dir);
-        users.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.child(getUserUID()).exists()) {
-                    mDatabaseReference.child(getUserUID()).setValue(matchesList);
-                } else {
-                    mDatabaseReference.child(getUserUID()).setValue(matchesList);
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) { }
-        });
-    }
+
 }

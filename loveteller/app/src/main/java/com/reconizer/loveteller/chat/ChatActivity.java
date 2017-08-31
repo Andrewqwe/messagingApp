@@ -44,7 +44,7 @@ public class ChatActivity extends AppCompatActivity {
 
         //===
         Database.initialize(true);
-        DatabaseReference ref = Database.setLocation(Database.getMessage_dir()).child(uid).child("messages");
+        DatabaseReference ref = Database.setLocation(Database.getMessageDir()).child(uid).child("messages");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -93,7 +93,7 @@ public class ChatActivity extends AppCompatActivity {
                     else {
                         Message m = new Message(myNumber, messageBox.getText().toString()); //tutaj numer zostaje zapisany w wiadomosci
                         chatAdapter.addMessage(m);
-                        Database.setLocation(Database.getMessage_dir()).child(uid).child("messages").setValue(messageList);
+                        Database.setLocation(Database.getMessageDir()).child(uid).child("messages").setValue(messageList);
                     }
                     messageBox.setText("");
                 }

@@ -37,6 +37,14 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
         context = parent.getContext();
         View itemView = LayoutInflater.from(context).inflate(R.layout.match_list_row, parent, false);
 
+        return new MatchListAdapter.MyViewHolder(itemView);
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+
+        myMatchesList.clear();
         //Listener do pobierania matchy userów
         mChildEventListener = new ChildEventListener() {
             @Override
@@ -63,9 +71,6 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
             public void onCancelled(DatabaseError databaseError) {}
         };
         Database.setLocation(Database.getMatchDir()).addChildEventListener(mChildEventListener);
-        Database.setLocation(Database.getLocationDir());
-
-        return new MatchListAdapter.MyViewHolder(itemView);
     }
 
     @Override
@@ -107,6 +112,7 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
 
                             for(MatchesList mlist2 : myMatchesList) {
                                 if (mlist2.mid.equals(mid)) {
+                                    if (mlist2.list != null)
                                     if (mlist2.list.contains(Database.getUserUID())) {
                                         ArrayList<String> userUID = new ArrayList<>();
                                         ArrayList<Message> messages = new ArrayList<>();
@@ -127,11 +133,11 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
                 @Override
                 public void onClick(View v) {
                     matchListRow.setBackgroundColor(v.getResources().getColor(R.color.no_match));
-                    for(MatchesList ml : myMatchesList) {
-                        if(ml.mid.equals(Database.getUserUID())) {
-                            if(ml.list != null) {
-                                ml.list = ml.list.replaceAll(mid + " ", "");
-                                Database.sendMatchToDatabase(ml);
+                    for(MatchesList mlist : myMatchesList) {
+                        if(mlist.mid.equals(Database.getUserUID())) {
+                            if(mlist.list != null) {
+                                mlist.list = mlist.list.replaceAll(mid + " ", "");
+                                Database.sendMatchToDatabase(mlist);
                             }
                         }
                     }

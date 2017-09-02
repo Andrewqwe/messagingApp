@@ -172,7 +172,7 @@ public class MainMatchFragment extends Fragment {
             if (radius >= start.distanceTo(end) && c.cid != null) {
                 if(!c.cid.equals(Database.getUserUID())) {
                     for (User u : usersList) {
-                        if(u != null && c != null)
+                        if(u.uid != null && c.cid != null)
                         if(u.uid.equals(c.cid))
                             matchesList.add(u);
                     }

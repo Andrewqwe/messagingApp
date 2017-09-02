@@ -38,8 +38,8 @@ public class MainChatFragment extends Fragment {
         chatView.setItemAnimator(new DefaultItemAnimator());
         chatView.setAdapter(chatListAdapter);
 
-        conversations.add(new Conversation(null, null));
-        conversations.add(new Conversation(null, null));
+        conversations.add(new Conversation(null));
+        conversations.add(new Conversation(null));
 
         return myFragmentView;
     }

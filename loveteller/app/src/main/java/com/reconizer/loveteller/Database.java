@@ -172,38 +172,38 @@ public class Database {
         });
     }
 
-    static public void sendMessagesToDatabase(final Messages messageArrayList) {
-        initialize(true);
-        final DatabaseReference messages = setLocation(MESSAGE_DIR);
-        messages.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                DatabaseReference newMessages = messages.push();
-                String messageID = newMessages.getKey();
-                newMessages.setValue(messageArrayList);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) { }
-        });
-    }
-
     static public void sendConversationToDatabase(final Conversation conversation, final String UID, final Messages messageArrayList) {
         initialize(true);
         final DatabaseReference conversations = setLocation(CONVERSATION_DIR);
+        final DatabaseReference messages = setLocation(MESSAGE_DIR);
         conversations.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.child(getUserUID()).exists()) { //może być problem przy 2 logowaniu.
+                if (snapshot.child(getUserUID()).exists() && snapshot.child(UID).exists()) { //może być problem przy 2 logowaniu.
                     // run some code
-                    conversations.child(getUserUID()).push().setValue(conversation); //tymczasowo
+                    DatabaseReference newMessages = messages.push();
+                    String messageID = newMessages.getKey();
+                    newMessages.setValue(messageArrayList);
+
+                    conversation.setMessagesID(messageID);
+
+                    DatabaseReference newConversation = conversations.child(getUserUID()).push();
+                    String conversationID = newConversation.getKey();
+                    newConversation.setValue(conversation);
+
+                    conversations.child(UID).child(conversationID).setValue(conversation);
                 } else {
-                    conversations.child(getUserUID()).push().setValue(conversation);
-                }
-                if (snapshot.child(UID).exists()) { //może być problem przy 2 logowaniu.
-                    // run some code
-                    conversations.child(UID).push().setValue(conversation); //tymczasowo
-                } else {
-                    conversations.child(UID).push().setValue(conversation);
+                    DatabaseReference newMessages = messages.push();
+                    String messageID = newMessages.getKey();
+                    newMessages.setValue(messageArrayList);
+
+                    conversation.setMessagesID(messageID);
+
+                    DatabaseReference newConversation = conversations.child(getUserUID()).push();
+                    String conversationID = newConversation.getKey();
+                    newConversation.setValue(conversation);
+
+                    conversations.child(UID).child(conversationID).setValue(conversation);
                 }
             }
             @Override

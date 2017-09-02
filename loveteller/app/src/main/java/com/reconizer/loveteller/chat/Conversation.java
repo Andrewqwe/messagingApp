@@ -10,9 +10,8 @@ public class Conversation {
     private ArrayList<String> usersID;
     private String messagesID;
 
-    public Conversation(ArrayList<String> usersUID, String messages) {
+    public Conversation(ArrayList<String> usersUID) {
         this.usersID = usersUID;
-        this.messagesID = messages;
     }
 
     public ArrayList<String> getUsersID() {

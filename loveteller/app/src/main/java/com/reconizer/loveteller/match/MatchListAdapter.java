@@ -25,6 +25,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by dawid on 2017-08-23.
@@ -131,14 +132,12 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
                                         ArrayList<String> userID = new ArrayList<>();
                                         userID.add(mlist1.mid);
                                         userID.add(mlist2.mid);
-                                        String messagesID = "123";
-                                        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                                        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.ENGLISH);
                                         Date date = new Date();
                                         String time = dateFormat.format(date);
                                         Messages messages = new Messages(time);
-                                        Database.sendMessagesToDatabase(messages);
-                                        Conversation conversation = new Conversation(userID, messagesID);
-                                        Database.sendConversationToDatabase(conversation, mlist2.mid);
+                                        Conversation conversation = new Conversation(userID);
+                                        Database.sendConversationToDatabase(conversation, mlist2.mid, messages);
                                     }
                                 }
                             }

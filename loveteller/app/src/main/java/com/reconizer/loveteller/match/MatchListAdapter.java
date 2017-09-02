@@ -18,9 +18,14 @@ import com.reconizer.loveteller.R;
 import com.reconizer.loveteller.User;
 import com.reconizer.loveteller.chat.Conversation;
 import com.reconizer.loveteller.chat.Message;
+import com.reconizer.loveteller.chat.Messages;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by dawid on 2017-08-23.
@@ -124,12 +129,15 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
                                 if (mlist2.mid.equals(mid)) {
                                     if (mlist2.listyes != null)
                                     if (mlist2.listyes.contains(Database.getUserUID())) {
-                                        ArrayList<String> userUID = new ArrayList<>();
-                                        ArrayList<Message> messages = new ArrayList<>();
-                                        userUID.add(mlist1.mid);
-                                        userUID.add(mlist2.mid);
-                                        Conversation conversation = new Conversation(userUID, messages);
-                                        Database.sendConversationToDatabase(conversation, mlist2.mid);
+                                        ArrayList<String> userID = new ArrayList<>();
+                                        userID.add(mlist1.mid);
+                                        userID.add(mlist2.mid);
+                                        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.ENGLISH);
+                                        Date date = new Date();
+                                        String time = dateFormat.format(date);
+                                        Messages messages = new Messages(time);
+                                        Conversation conversation = new Conversation(userID);
+                                        Database.sendConversationToDatabase(conversation, mlist2.mid, messages);
                                     }
                                 }
                             }

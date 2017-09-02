@@ -7,28 +7,27 @@ import java.util.ArrayList;
  */
 
 public class Conversation {
-    private ArrayList<String> usersUID;
-    private ArrayList<Message> messages;
+    private ArrayList<String> usersID;
+    private String messagesID;
 
-    public Conversation(ArrayList<String> usersUID, ArrayList<Message> messages) {
-        this.usersUID = usersUID;
-        this.messages = messages;
+    public Conversation(ArrayList<String> usersUID) {
+        this.usersID = usersUID;
     }
 
-    public ArrayList<String> getUsersUID() {
-        return usersUID;
+    public ArrayList<String> getUsersID() {
+        return usersID;
     }
 
-    public void setUsersUID(ArrayList<String> usersUID) {
-        this.usersUID = usersUID;
+    public void setUsersID(ArrayList<String> usersID) {
+        this.usersID = usersID;
     }
 
 
-    public ArrayList<Message> getMessages() {
-        return messages;
+    public String getMessagesID() {
+        return messagesID;
     }
 
-    public void setMessages(ArrayList<Message> messages) {
-        this.messages = messages;
+    public void setMessagesID(String messagesID) {
+        this.messagesID = messagesID;
     }
 }

@@ -43,6 +43,7 @@ public class MainMatchFragment extends Fragment {
     private ArrayList<Coordinates> coordinatesList = new ArrayList<>();
     private ArrayList<User> usersList = new ArrayList<>();
     private ChildEventListener lChildEventListener, uChildEventListener;
+    private int radius;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -86,7 +87,7 @@ public class MainMatchFragment extends Fragment {
         if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, ls); //Aktualizowanie co jeden metr
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15, 1, ls); //Aktualizowanie co jeden metr
 
         //Listener do pobrania listy lokalizacji z bazy
         lChildEventListener = new ChildEventListener() {
@@ -123,6 +124,10 @@ public class MainMatchFragment extends Fragment {
             {
                 User u = dataSnapshot.getValue(User.class);
                 u.uid = dataSnapshot.getKey();
+                if(u.uid.equals(Database.getUserUID())) {
+                    if(u.radius != null) radius = Integer.parseInt(u.radius);
+                    else radius = 0;
+                }
                 usersList.add(u);
             }
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
@@ -164,9 +169,10 @@ public class MainMatchFragment extends Fragment {
         for (Coordinates c : coordinatesList) {
             end.setLatitude(c.latitude);
             end.setLongitude(c.longitude);
-            if (1000 >= start.distanceTo(end) && c.cid != null) {
+            if (radius >= start.distanceTo(end) && c.cid != null) {
                 if(!c.cid.equals(Database.getUserUID())) {
                     for (User u : usersList) {
+                        if(u != null && c != null)
                         if(u.uid.equals(c.cid))
                             matchesList.add(u);
                     }

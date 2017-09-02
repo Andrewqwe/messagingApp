@@ -16,7 +16,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.reconizer.loveteller.chat.Conversation;
-import com.reconizer.loveteller.chat.Message;
 import com.reconizer.loveteller.chat.Messages;
 import com.reconizer.loveteller.match.MatchesList;
 
@@ -225,9 +224,9 @@ public class Database {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.child(getUserUID()).exists()) {
-                    match.child(getUserUID()).setValue(matchesList);
+                    match.child(matchesList.mid).setValue(matchesList);
                 } else {
-                    match.child(getUserUID()).setValue(matchesList);
+                    match.child(matchesList.mid).setValue(matchesList);
                 }
             }
 

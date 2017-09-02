@@ -32,15 +32,14 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ChatAdapter chatAdapter;
     private int myNumber;
-    private String uid;
+    private String messageID;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         //dane od Damiana
-        String messageID = getIntent().getStringExtra("messageID");
-        int myIdPosition = getIntent().getIntExtra("myIdPosition", -1);         //-1 oznacza błąd
+        messageID = getIntent().getStringExtra("messageID");
+        myNumber = getIntent().getIntExtra("myIdPosition", -1);         //-1 oznacza błąd
 
-        this.uid = "test";
         messageList.clear();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
@@ -48,7 +47,7 @@ public class ChatActivity extends AppCompatActivity {
 
         //===
         Database.initialize(true);
-        DatabaseReference ref = Database.setLocation(Database.getMessageDir()).child(uid).child("messages");
+        DatabaseReference ref = Database.setLocation(Database.getMessageDir()).child(messageID).child("messages");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -74,9 +73,6 @@ public class ChatActivity extends AppCompatActivity {
         //===
 
         chatAdapter = new ChatAdapter(messageList);
-        myNumber = 0; // tutaj wypadalo by okreslic ktory numerek mamy
-
-
         chatAdapter.setMyNumber(myNumber); //wiadomosci z moim numerkiem beda po prawo, reszta po lewo
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -100,7 +96,7 @@ public class ChatActivity extends AppCompatActivity {
                     } else {
                         Message m = new Message(myNumber, messageBox.getText().toString()); //tutaj numer zostaje zapisany w wiadomosci
                         chatAdapter.addMessage(m);
-                        Database.setLocation(Database.getMessageDir()).child(uid).child("messages").setValue(messageList);
+                        Database.setLocation(Database.getMessageDir()).child(messageID).child("messages").setValue(messageList);
                     }
                     messageBox.setText("");
                 }

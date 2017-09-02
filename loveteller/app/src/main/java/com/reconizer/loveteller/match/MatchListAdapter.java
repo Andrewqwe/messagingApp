@@ -17,7 +17,6 @@ import com.reconizer.loveteller.Database;
 import com.reconizer.loveteller.R;
 import com.reconizer.loveteller.User;
 import com.reconizer.loveteller.chat.Conversation;
-import com.reconizer.loveteller.chat.Message;
 import com.reconizer.loveteller.chat.Messages;
 import com.squareup.picasso.Picasso;
 
@@ -87,9 +86,23 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
         holder.description.setText(u.description);
         holder.mid = u.uid;
         for(MatchesList mcolor : myMatchesList){
-            if(mcolor.mid.equals(Database.getUserUID()) && mcolor.listyes != null && mcolor.listno != null){
-                if(mcolor.listyes.contains(holder.mid)) holder.matchListRow.setBackgroundColor(context.getResources().getColor(R.color.yes_match));
-                else if(mcolor.listno.contains(holder.mid)) holder.matchListRow.setBackgroundColor(context.getResources().getColor(R.color.no_match));
+            if(mcolor.mid.equals(Database.getUserUID())){
+                if(mcolor.listmatch != null) {
+                    if (mcolor.listmatch.contains(holder.mid)) {
+                        RecyclerView.LayoutParams param = (RecyclerView.LayoutParams)holder.matchListRow.getLayoutParams();
+                        holder.matchListRow.setVisibility(View.GONE);
+                        param.height = 0;
+                        param.width = 0;
+                    }
+                }
+                if(mcolor.listyes != null) {
+                    if (mcolor.listyes.contains(holder.mid))
+                        holder.matchListRow.setBackgroundColor(context.getResources().getColor(R.color.yes_match));
+                }
+                if (mcolor.listno != null) {
+                    if (mcolor.listno.contains(holder.mid))
+                        holder.matchListRow.setBackgroundColor(context.getResources().getColor(R.color.no_match));
+                }
             }
         }
     }
@@ -138,7 +151,24 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
                                         Messages messages = new Messages(time);
                                         Conversation conversation = new Conversation(userID);
                                         Database.sendConversationToDatabase(conversation, mlist2.mid, messages);
+                                        if(mlist1.listmatch == null) {
+                                            mlist1.listmatch = mid + " ";
+                                            mlist1.listyes = mlist1.listyes.replaceAll(mid + " ", "");
+                                        }
+                                        else if(!mlist1.listmatch.contains(mid)) {
+                                            mlist1.listmatch += mid + " ";
+                                            mlist1.listyes = mlist1.listyes.replaceAll(mid + " ", "");
+                                        }
+                                        if(mlist2.listmatch == null) {
+                                            mlist2.listmatch = mlist1.mid + " ";
+                                            mlist2.listyes = mlist2.listyes.replaceAll(mlist1.mid + " ", "");
+                                        }
+                                        else if(!mlist2.listmatch.contains(mlist1.mid)) {
+                                            mlist2.listmatch += mlist1.mid + " ";
+                                            mlist2.listyes = mlist2.listyes.replaceAll(mlist1.mid + " ", "");
+                                        }
                                     }
+                                    Database.sendMatchToDatabase(mlist2);
                                 }
                             }
                             Database.sendMatchToDatabase(mlist1);

@@ -21,15 +21,15 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        final TextView tv_name = (TextView)findViewById(R.id.textViewEditProfileName);
-        final EditText et_desc = (EditText)findViewById(R.id.editTextEditProfileDescription);
-        final ImageView iv_gender = (ImageView)findViewById(R.id.imageViewEditProfileGender);
-        final SeekBar sb_radius = (SeekBar)findViewById(R.id.seekBarEditProfileRadius);
-        final TextView tv_radius = (TextView)findViewById(R.id.textViewEditProfileRadius);
+        final TextView tv_name = (TextView) findViewById(R.id.textViewEditProfileName);
+        final EditText et_desc = (EditText) findViewById(R.id.editTextEditProfileDescription);
+        final ImageView iv_gender = (ImageView) findViewById(R.id.imageViewEditProfileGender);
+        final SeekBar sb_radius = (SeekBar) findViewById(R.id.seekBarEditProfileRadius);
+        final TextView tv_radius = (TextView) findViewById(R.id.textViewEditProfileRadius);
 
         final String uid = Database.getUserUID();
 
-        if(uid != null) {
+        if (uid != null) {
             /*pobieramy z bazy dane profilu uzytkownika i wpisujemy je na ekran*/
 //            Database.SetLocation(Database.getUsersDirName()).child(uid).addValueEventListener(new ValueEventListener() {
 //                @Override
@@ -95,7 +95,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                     int r;
 
-                    if(u.radius != null)
+                    if (u.radius != null)
                         r = Integer.valueOf(u.radius);
                     else
                         r = 0;
@@ -111,7 +111,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                         @Override
                         public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            if(s.length() != 0)
+                            if (s.length() != 0)
                                 Database.setLocation(Database.getUsersDirName()).child(uid).child("description").setValue(s.toString());
                         }
 
@@ -127,8 +127,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                 }
             });
-        }
-        else //if (uid == null)
+        } else //if (uid == null)
         {
             Toast.makeText(this, "Wystapil blad. Sprobuj ponownie.", Toast.LENGTH_LONG).show();
             return;
@@ -141,7 +140,7 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 tv_radius.setText(progress * 50 + "m");
 
-                Database.setLocation(Database.getUsersDirName()).child(uid).child("radius").setValue(String.valueOf(progress*50));
+                Database.setLocation(Database.getUsersDirName()).child(uid).child("radius").setValue(String.valueOf(progress * 50));
             }
 
             @Override

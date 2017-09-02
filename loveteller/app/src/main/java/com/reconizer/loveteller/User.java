@@ -17,15 +17,16 @@ public class User {
     public String age;
     public String facebook_id;
 
-    public User() {}
+    public User() {
+    }
 
-    public User(String name,String email, String photo) {
+    public User(String name, String email, String photo) {
         this.email = email;
         this.name = name;
         this.photo = photo;
     }
 
-    public User(String first_name,String last_name, String email,String gender, String photo,String facebook_id) {
+    public User(String first_name, String last_name, String email, String gender, String photo, String facebook_id) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.email = email;
@@ -37,6 +38,7 @@ public class User {
 
     /**
      * Jak kiedyś za dobrych czasów otrzymamy dane o wieku użytkownika. "Kapsuła czasu 25.08.17 11:42 Pochmurno 21oC Wiatr Zachodni."
+     *
      * @param first_name
      * @param last_name
      * @param email
@@ -45,7 +47,7 @@ public class User {
      * @param photo
      * @param facebook_id
      */
-    public User(String first_name,String last_name, String email,String gender,String age, String photo,String facebook_id) {
+    public User(String first_name, String last_name, String email, String gender, String age, String photo, String facebook_id) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.email = email;

@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     static int color = Color.parseColor("#ffff8800");
     private static final int RC_SIGN_IN = 123;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         FirebaseAuth auth = FirebaseAuth.getInstance();  //Radek  //TODO: po wciśnięciu przycisku powrotu omijamy proces logowania naprawić!
@@ -43,17 +44,17 @@ public class MainActivity extends AppCompatActivity {
             // already signed in
         } else {
             // not signed in
-                startActivityForResult(
-                        AuthUI.getInstance()
-                                .createSignInIntentBuilder()
-                                .setIsSmartLockEnabled(false)
-                                //.setTheme(R.style.GreenTheme)  //TODO: dodać plik ze stylem i logo do panelu logowania
-                                .setAvailableProviders(
-                                        Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
-                                                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build()
-                                        ))
-                                .build(),
-                        RC_SIGN_IN);
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setIsSmartLockEnabled(false)
+                            //.setTheme(R.style.GreenTheme)  //TODO: dodać plik ze stylem i logo do panelu logowania
+                            .setAvailableProviders(
+                                    Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
+                                            new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build()
+                                    ))
+                            .build(),
+                    RC_SIGN_IN);
 
         }
         super.onCreate(savedInstanceState);
@@ -82,28 +83,28 @@ public class MainActivity extends AppCompatActivity {
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pager.setCurrentItem(0,true);
+                pager.setCurrentItem(0, true);
             }
         });
         ImageButton chatButton = (ImageButton) findViewById(R.id.imageChatButton);
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pager.setCurrentItem(1,true);
+                pager.setCurrentItem(1, true);
             }
         });
         ImageButton matchButton = (ImageButton) findViewById(R.id.imageMatchButton);
         matchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pager.setCurrentItem(2,true);
+                pager.setCurrentItem(2, true);
             }
         });
         ImageButton mapButton = (ImageButton) findViewById(R.id.imageMapButton);
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pager.setCurrentItem(3,true);
+                pager.setCurrentItem(3, true);
             }
         });
 
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override //jezeli dodajemy element warto pamietac ze nalezy zmienic getCount
         public Fragment getItem(int position) {
-            switch(position) {
+            switch (position) {
                 case 0: {
                     return MainProfileFragment.newInstance();
                 }
@@ -130,7 +131,8 @@ public class MainActivity extends AppCompatActivity {
                 case 3: {
                     return MainMapFragment.newInstance();
                 }
-                default: return MainMapFragment.newInstance();
+                default:
+                    return MainMapFragment.newInstance();
             }
         }
 
@@ -140,12 +142,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void refreshButtonColours(int position){
+    private void refreshButtonColours(int position) {
         ImageButton profileButton = (ImageButton) findViewById(R.id.imageProfileButton);
         ImageButton mapButton = (ImageButton) findViewById(R.id.imageMapButton);
         ImageButton chatButton = (ImageButton) findViewById(R.id.imageChatButton);
         ImageButton matchButton = (ImageButton) findViewById(R.id.imageMatchButton);
-        switch(position) {
+        switch (position) {
             case 0: {
                 profileButton.setColorFilter(color);
                 chatButton.setColorFilter(Color.GRAY);
@@ -175,28 +177,30 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-   @Override
+
+    @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in.
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
 
-           // Log.e("scoiaLogin","Co tu sie wyprawilov22222");
+            // Log.e("scoiaLogin","Co tu sie wyprawilov22222");
             Database.setLocation(Database.getUsersDirName()).child(Database.getUserUID()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     if (snapshot.getValue() != null) {
                         //user exists, do something
-                        Log.e("scoiaLogin","Już jest");
+                        Log.e("scoiaLogin", "Już jest");
                     } else {
-                        Log.e("scoiaLogin","Jeszcze nie ma");
+                        Log.e("scoiaLogin", "Jeszcze nie ma");
                         Database.getFacebookData();
                         //user does not exist, do something else
                     }
                 }
+
                 @Override
-                public void onCancelled(DatabaseError databaseError){
+                public void onCancelled(DatabaseError databaseError) {
                 }
             });
         }
@@ -204,8 +208,7 @@ public class MainActivity extends AppCompatActivity {
 
     /*wywolywane po nacisnieciu przycisku ustawienia we fragmencie MainProfileFragment
     * otwiera activity EditProfileActivity w celu edytowania profilu*/
-    public void profileSettingsOnClick(View v)
-    {
+    public void profileSettingsOnClick(View v) {
         //Database.sendLocationToDatabase(new Location(24,33)); //Pierwsze dodanie lokacji.
         Intent intent = new Intent(this, EditProfileActivity.class);
         startActivity(intent);

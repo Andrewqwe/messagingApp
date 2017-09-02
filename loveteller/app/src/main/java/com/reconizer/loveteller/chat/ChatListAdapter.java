@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.reconizer.loveteller.Database;
 import com.reconizer.loveteller.R;
 
 import java.util.ArrayList;
@@ -32,8 +33,12 @@ class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.MyViewHolder>
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Log.e("Pos", String.valueOf(holder.getAdapterPosition()));
-                Intent intent = new Intent(v.getContext(),ChatActivity.class);
+                Log.e("Pos", String.valueOf(holder.getAdapterPosition()));
+                Intent intent = new Intent(v.getContext(), ChatActivity.class);
+                intent.putExtra("messageID", conversations.get(holder.getAdapterPosition()).getMessagesID());
+                Log.e("messageID", conversations.get(holder.getAdapterPosition()).getMessagesID());
+                intent.putExtra("myIdPosition", conversations.get(holder.getAdapterPosition()).getUsersID().indexOf(Database.getUserUID()));
+                Log.e("myIdPosition", String.valueOf(conversations.get(holder.getAdapterPosition()).getUsersID().indexOf(Database.getUserUID())));
                 v.getContext().startActivity(intent);
             }
         });

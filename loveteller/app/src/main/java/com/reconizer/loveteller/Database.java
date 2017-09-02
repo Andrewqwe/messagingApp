@@ -96,6 +96,7 @@ public class Database {
     /**
      * Metoda prywatna pobierająca z bazy danych dane o zalogowanym użytkowniku
      * NIE UZYWAJCIE JUZ PLZZ
+     *
      * @return Zwraca tabele stringów gdzie kolejno jest nazwa użytkownika,e-mail,UID lub pustą tabelę gdy użytkownik nie jest zalogowany
      */
     static public String[] getUserInfo() {
@@ -148,8 +149,10 @@ public class Database {
                     users.child(getUserUID()).setValue(profile);
                 }
             }
+
             @Override
-            public void onCancelled(DatabaseError databaseError) { }
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
     }
 
@@ -166,8 +169,10 @@ public class Database {
                     location.child(getUserUID()).setValue(coordinates);
                 }
             }
+
             @Override
-            public void onCancelled(DatabaseError databaseError) { }
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
     }
 
@@ -205,8 +210,10 @@ public class Database {
                     conversations.child(UID).child(conversationID).setValue(conversation);
                 }
             }
+
             @Override
-            public void onCancelled(DatabaseError databaseError) { }
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
     }
 
@@ -222,8 +229,10 @@ public class Database {
                     match.child(matchesList.mid).setValue(matchesList);
                 }
             }
+
             @Override
-            public void onCancelled(DatabaseError databaseError) { }
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
     }
 
@@ -246,7 +255,7 @@ public class Database {
                                     (ImageRequest.getProfilePictureUri(object.getString("id"), 500, 500)).toString(), //Zdjęcie z profilu Facebook
                                     object.getString("id")
                             );
-                            Log.e("scoia UID", " UID= "+getUserUID());
+                            Log.e("scoia UID", " UID= " + getUserUID());
                             Log.e("scoia facebook", " Token=" + AccessToken.getCurrentAccessToken() + " FirstName=" + object.getString("first_name") + " Email=" + object.getString("email") + " photoUrl=" + (ImageRequest.getProfilePictureUri(object.optString("id"), 500, 500)).toString());
                             sendProfileToDatabase(user); //zabezpieczona przed brakiem połączenia z baza danych
                         } catch (JSONException e) {

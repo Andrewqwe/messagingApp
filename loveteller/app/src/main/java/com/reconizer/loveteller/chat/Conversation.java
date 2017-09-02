@@ -14,6 +14,9 @@ public class Conversation {
         this.usersID = usersUID;
     }
 
+    public Conversation() {
+    }
+
     public ArrayList<String> getUsersID() {
         return usersID;
     }

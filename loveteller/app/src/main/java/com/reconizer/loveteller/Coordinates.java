@@ -10,9 +10,10 @@ public class Coordinates {
     public double latitude;
     public double longitude;
 
-    public Coordinates(){}
+    public Coordinates() {
+    }
 
-    public Coordinates(String cid, double latitude, double longitude){
+    public Coordinates(String cid, double latitude, double longitude) {
         this.cid = cid;
         this.latitude = latitude;
         this.longitude = longitude;

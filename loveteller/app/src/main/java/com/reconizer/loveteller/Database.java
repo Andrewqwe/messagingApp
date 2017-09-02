@@ -16,6 +16,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.reconizer.loveteller.chat.Conversation;
+import com.reconizer.loveteller.chat.Message;
+import com.reconizer.loveteller.chat.Messages;
 import com.reconizer.loveteller.match.MatchesList;
 
 import org.json.JSONException;
@@ -89,8 +91,7 @@ public class Database {
 
     static public DatabaseReference setLocation(String path) {
         initialize(true);
-        DatabaseReference mDatabaseReference = mDatabase.getReference().child(path);
-        return mDatabaseReference;
+        return mDatabase.getReference().child(path);
     }
 
     /**
@@ -107,8 +108,7 @@ public class Database {
             // authenticate with your backend server, if you have one. Use
             // FirebaseUser.getToken() instead.
             String uid = user.getUid();
-            String[] details = {name, email, uid};
-            return details;
+            return new String[]{name, email, uid};
         }
         return null;
     }
@@ -172,7 +172,22 @@ public class Database {
         });
     }
 
-    static public void sendConversationToDatabase(final Conversation conversation, final String UID) {
+    static public void sendMessagesToDatabase(final Messages messageArrayList) {
+        initialize(true);
+        final DatabaseReference messages = setLocation(MESSAGE_DIR);
+        messages.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                DatabaseReference newMessages = messages.push();
+                String messageID = newMessages.getKey();
+                newMessages.setValue(messageArrayList);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+    }
+
+    static public void sendConversationToDatabase(final Conversation conversation, final String UID, final Messages messageArrayList) {
         initialize(true);
         final DatabaseReference conversations = setLocation(CONVERSATION_DIR);
         conversations.addListenerForSingleValueEvent(new ValueEventListener() {

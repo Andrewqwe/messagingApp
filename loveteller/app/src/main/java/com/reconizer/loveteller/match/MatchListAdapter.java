@@ -18,9 +18,13 @@ import com.reconizer.loveteller.R;
 import com.reconizer.loveteller.User;
 import com.reconizer.loveteller.chat.Conversation;
 import com.reconizer.loveteller.chat.Message;
+import com.reconizer.loveteller.chat.Messages;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by dawid on 2017-08-23.
@@ -108,11 +112,16 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
                             for(MatchesList mlist2 : myMatchesList) {
                                 if (mlist2.mid.equals(mid)) {
                                     if (mlist2.list.contains(Database.getUserUID())) {
-                                        ArrayList<String> userUID = new ArrayList<>();
-                                        ArrayList<Message> messages = new ArrayList<>();
-                                        userUID.add(mlist1.mid);
-                                        userUID.add(mlist2.mid);
-                                        Conversation conversation = new Conversation(userUID, messages);
+                                        ArrayList<String> userID = new ArrayList<>();
+                                        userID.add(mlist1.mid);
+                                        userID.add(mlist2.mid);
+                                        String messagesID = "123";
+                                        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                                        Date date = new Date();
+                                        String time = dateFormat.format(date);
+                                        Messages messages = new Messages(time);
+                                        Database.sendMessagesToDatabase(messages);
+                                        Conversation conversation = new Conversation(userID, messagesID);
                                         Database.sendConversationToDatabase(conversation, mlist2.mid);
                                     }
                                 }

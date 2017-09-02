@@ -36,7 +36,11 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        this.uid="test";
+        //dane od Damiana
+        String messageID = getIntent().getStringExtra("messageID");
+        int myIdPosition = getIntent().getIntExtra("myIdPosition", -1);         //-1 oznacza błąd
+
+        this.uid = "test";
         messageList.clear();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
@@ -48,13 +52,14 @@ public class ChatActivity extends AppCompatActivity {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                GenericTypeIndicator<List<Message>> t = new GenericTypeIndicator<List<Message>>(){};
+                GenericTypeIndicator<List<Message>> t = new GenericTypeIndicator<List<Message>>() {
+                };
                 List messages = dataSnapshot.getValue(t);
-                if(messages == null){
-                    Log.println(Log.ERROR,"Andrzej","Brak wiadomosci do pobrania z bazy");
-                }else{
+                if (messages == null) {
+                    Log.println(Log.ERROR, "Andrzej", "Brak wiadomosci do pobrania z bazy");
+                } else {
                     messageList.clear();
-                    for(Object m : messages){
+                    for (Object m : messages) {
                         messageList.add((Message) m);
                     }
                     chatAdapter.notifyDataSetChanged();
@@ -69,7 +74,7 @@ public class ChatActivity extends AppCompatActivity {
         //===
 
         chatAdapter = new ChatAdapter(messageList);
-        myNumber=0; // tutaj wypadalo by okreslic ktory numerek mamy
+        myNumber = 0; // tutaj wypadalo by okreslic ktory numerek mamy
 
 
         chatAdapter.setMyNumber(myNumber); //wiadomosci z moim numerkiem beda po prawo, reszta po lewo
@@ -87,10 +92,12 @@ public class ChatActivity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(messageBox.length()>0){
-                    if(messageBox.getText().toString().equals("0")){myNumber=0;}
-                    else if(messageBox.getText().toString().equals("1")){myNumber=1;}
-                    else {
+                if (messageBox.length() > 0) {
+                    if (messageBox.getText().toString().equals("0")) {
+                        myNumber = 0;
+                    } else if (messageBox.getText().toString().equals("1")) {
+                        myNumber = 1;
+                    } else {
                         Message m = new Message(myNumber, messageBox.getText().toString()); //tutaj numer zostaje zapisany w wiadomosci
                         chatAdapter.addMessage(m);
                         Database.setLocation(Database.getMessageDir()).child(uid).child("messages").setValue(messageList);
@@ -101,32 +108,31 @@ public class ChatActivity extends AppCompatActivity {
         });
         //===========================================================
         //showExampleMessages();
-        }
+    }
 
-        private void showExampleMessages()
-        {
-            Message message = new Message(1,"Czesc");
-            messageList.add(message);
+    private void showExampleMessages() {
+        Message message = new Message(1, "Czesc");
+        messageList.add(message);
 
-            message = new Message(0,"No hej :)");
-            messageList.add(message);
+        message = new Message(0, "No hej :)");
+        messageList.add(message);
 
-            message = new Message(1,"Co slychac ?");
-            messageList.add(message);
+        message = new Message(1, "Co slychac ?");
+        messageList.add(message);
 
-            message = new Message(0,"Wszystko w porzadku a u ciebie ?");
-            messageList.add(message);
+        message = new Message(0, "Wszystko w porzadku a u ciebie ?");
+        messageList.add(message);
 
-            message = new Message(1,"Nareszcie działa to dynamiczne skalowanie dymków. Przydał by się jakiś guzik do wysyłania tej wiadomosci" +
-                    " i powoli mozna zaczac uzywac tego czatu");
-            messageList.add(message);
+        message = new Message(1, "Nareszcie działa to dynamiczne skalowanie dymków. Przydał by się jakiś guzik do wysyłania tej wiadomosci" +
+                " i powoli mozna zaczac uzywac tego czatu");
+        messageList.add(message);
 
-            message = new Message(0,"Widze ze dobrze ci idzie, ciekawe jak radzi sobie reszta");
-            messageList.add(message);
+        message = new Message(0, "Widze ze dobrze ci idzie, ciekawe jak radzi sobie reszta");
+        messageList.add(message);
 
-            message = new Message(1,"To fajna ekipa, na pewno mnie nie zawiodą ! :)");
-            messageList.add(message);
+        message = new Message(1, "To fajna ekipa, na pewno mnie nie zawiodą ! :)");
+        messageList.add(message);
 
-            chatAdapter.notifyDataSetChanged();
-        }
+        chatAdapter.notifyDataSetChanged();
+    }
 }

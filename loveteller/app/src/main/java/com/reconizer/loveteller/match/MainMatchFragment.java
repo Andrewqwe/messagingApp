@@ -43,6 +43,8 @@ public class MainMatchFragment extends Fragment {
     private ArrayList<Coordinates> coordinatesList = new ArrayList<>();
     private ArrayList<User> usersList = new ArrayList<>();
     private ChildEventListener lChildEventListener, uChildEventListener;
+    private int radius;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,8 +57,8 @@ public class MainMatchFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        matchesListView = (RecyclerView)getActivity().findViewById(R.id.matchListView);
-        emptyView = (TextView)getActivity().findViewById(R.id.emptyView);
+        matchesListView = (RecyclerView) getActivity().findViewById(R.id.matchListView);
+        emptyView = (TextView) getActivity().findViewById(R.id.emptyView);
 
         coordinatesList.clear();
         usersList.clear();
@@ -79,67 +81,85 @@ public class MainMatchFragment extends Fragment {
                 start.setLongitude(location.getLongitude());
                 filter();
             }
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
-            public void onProviderEnabled(String provider) {}
-            public void onProviderDisabled(String provider) {}
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            public void onProviderEnabled(String provider) {
+            }
+
+            public void onProviderDisabled(String provider) {
+            }
         };
         if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, ls); //Aktualizowanie co jeden metr
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 15, 1, ls); //Aktualizowanie co jeden metr
 
         //Listener do pobrania listy lokalizacji z bazy
         lChildEventListener = new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s)
-            {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Coordinates c = dataSnapshot.getValue(Coordinates.class);
                 coordinatesList.add(c);
                 filter();
             }
+
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Coordinates c = dataSnapshot.getValue(Coordinates.class);
-                for(int i = 0; i < coordinatesList.size(); i++)
-                {
-                    if(coordinatesList.get(i).cid.equals(c.cid))
-                    {
+                for (int i = 0; i < coordinatesList.size(); i++) {
+                    if (coordinatesList.get(i).cid.equals(c.cid)) {
                         coordinatesList.remove(i);
                         coordinatesList.add(c);
                         filter();
                         break;
                     }
                 }
-        }
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-            public void onCancelled(DatabaseError databaseError) {}
+            }
+
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            public void onCancelled(DatabaseError databaseError) {
+            }
         };
         Database.setLocation(Database.getLocationDir()).addChildEventListener(lChildEventListener);
 
         //Listener do pobrania userów z bazy
         uChildEventListener = new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s)
-            {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 User u = dataSnapshot.getValue(User.class);
                 u.uid = dataSnapshot.getKey();
+                if (u.uid.equals(Database.getUserUID())) {
+                    if (u.radius != null) radius = Integer.parseInt(u.radius);
+                    else radius = 0;
+                }
                 usersList.add(u);
             }
+
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 User u = dataSnapshot.getValue(User.class);
-                for(int i = 0; i < usersList.size(); i++)
-                {
-                    if(usersList.get(i).email.equals(u.email))
-                    {
+                for (int i = 0; i < usersList.size(); i++) {
+                    if (usersList.get(i).email.equals(u.email)) {
                         usersList.remove(i);
                         usersList.add(u);
                         break;
                     }
                 }
             }
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-            public void onCancelled(DatabaseError databaseError) {}
+
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            public void onCancelled(DatabaseError databaseError) {
+            }
         };
         Database.setLocation(Database.getUsersDirName()).addChildEventListener(uChildEventListener);
 
@@ -152,7 +172,7 @@ public class MainMatchFragment extends Fragment {
     }
 
 
-    public static MainMatchFragment newInstance(){
+    public static MainMatchFragment newInstance() {
         MainMatchFragment f = new MainMatchFragment();
         return f;
     }
@@ -164,11 +184,12 @@ public class MainMatchFragment extends Fragment {
         for (Coordinates c : coordinatesList) {
             end.setLatitude(c.latitude);
             end.setLongitude(c.longitude);
-            if (1000 >= start.distanceTo(end) && c.cid != null) {
-                if(!c.cid.equals(Database.getUserUID())) {
+            if (radius >= start.distanceTo(end) && c.cid != null) {
+                if (!c.cid.equals(Database.getUserUID())) {
                     for (User u : usersList) {
-                        if(u.uid.equals(c.cid))
-                            matchesList.add(u);
+                        if (u != null && c != null)
+                            if (u.uid.equals(c.cid))
+                                matchesList.add(u);
                     }
                 }
             }
@@ -179,8 +200,7 @@ public class MainMatchFragment extends Fragment {
         if (start.getLatitude() == 0 && start.getLongitude() == 0) {
             matchesListView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             matchesListView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
         }

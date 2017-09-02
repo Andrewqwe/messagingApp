@@ -6,12 +6,15 @@ package com.reconizer.loveteller.match;
 
 public class MatchesList {
     public String mid;
-    public String list;
+    public String listyes;
+    public String listno;
 
-    public MatchesList(){}
+    public MatchesList() {
+    }
 
-    public MatchesList(String mid, String list){
+    public MatchesList(String mid, String listyes, String listno) {
         this.mid = mid;
-        this.list = list;
+        this.listyes = listyes;
+        this.listno = listno;
     }
 }

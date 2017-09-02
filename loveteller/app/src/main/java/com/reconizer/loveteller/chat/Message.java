@@ -4,7 +4,7 @@ package com.reconizer.loveteller.chat;
  * Created by Damian on 15.08.2017.
  */
 
-class Message {
+public class Message {
     private int owner;
     private String message;
 

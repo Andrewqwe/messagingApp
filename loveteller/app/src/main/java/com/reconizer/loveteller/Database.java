@@ -16,6 +16,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.reconizer.loveteller.chat.Conversation;
+import com.reconizer.loveteller.chat.Message;
+import com.reconizer.loveteller.chat.Messages;
 import com.reconizer.loveteller.match.MatchesList;
 
 import org.json.JSONException;
@@ -29,13 +31,13 @@ public class Database {
 
     //Firebase instance variables
     static private FirebaseDatabase mDatabase;
-    static private DatabaseReference mDatabaseReference;
+    //static private DatabaseReference mDatabaseReference;
 
     /*nazwy folderow z danymi w bazie*/
     static final private String USERS_DIR = "users";
     static final private String LOCATION_DIR = "location";
     static final private String MESSAGE_DIR = "message";
-    static final private String CONVERSATION_DIR = "message";
+    static final private String CONVERSATION_DIR = "conversation";
     static final private String MATCH_DIR = "match";
 
     /*funkcje do zwracania nazw katalogow w bazie danych*/
@@ -89,13 +91,13 @@ public class Database {
 
     static public DatabaseReference setLocation(String path) {
         initialize(true);
-        mDatabaseReference = mDatabase.getReference().child(path);
-        return mDatabaseReference;
+        return mDatabase.getReference().child(path);
     }
 
     /**
      * Metoda prywatna pobierająca z bazy danych dane o zalogowanym użytkowniku
      * NIE UZYWAJCIE JUZ PLZZ
+     *
      * @return Zwraca tabele stringów gdzie kolejno jest nazwa użytkownika,e-mail,UID lub pustą tabelę gdy użytkownik nie jest zalogowany
      */
     static public String[] getUserInfo() {
@@ -107,8 +109,7 @@ public class Database {
             // authenticate with your backend server, if you have one. Use
             // FirebaseUser.getToken() instead.
             String uid = user.getUid();
-            String[] details = {name, email, uid};
-            return details;
+            return new String[]{name, email, uid};
         }
         return null;
     }
@@ -138,72 +139,101 @@ public class Database {
 
     static public void sendProfileToDatabase(final User profile) {
         initialize(true);
-        DatabaseReference users = setLocation(USERS_DIR);
+        final DatabaseReference users = setLocation(USERS_DIR);
         users.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.child(getUserUID()).exists()) { //może być problem przy 2 logowaniu.
                     // run some code
-                    mDatabaseReference.child(getUserUID()).setValue(profile); //tymczasowo
+                    users.child(getUserUID()).setValue(profile); //tymczasowo
                 } else {
-                    mDatabaseReference.child(getUserUID()).setValue(profile);
+                    users.child(getUserUID()).setValue(profile);
                 }
             }
+
             @Override
-            public void onCancelled(DatabaseError databaseError) { }
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
     }
 
     static public void sendLocationToDatabase(final Coordinates coordinates) {
         initialize(true);
-        DatabaseReference users = setLocation(LOCATION_DIR);
-        users.addListenerForSingleValueEvent(new ValueEventListener() {
+        final DatabaseReference location = setLocation(LOCATION_DIR);
+        location.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.child(getUserUID()).exists()) { //może być problem przy 2 logowaniu.
                     // run some code
-                    mDatabaseReference.child(getUserUID()).setValue(coordinates); //tymczasowo
+                    location.child(getUserUID()).setValue(coordinates); //tymczasowo
                 } else {
-                    mDatabaseReference.child(getUserUID()).setValue(coordinates);
+                    location.child(getUserUID()).setValue(coordinates);
                 }
             }
+
             @Override
-            public void onCancelled(DatabaseError databaseError) { }
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
     }
 
-    static public void sendConversationToDatabase(final Conversation conversation) {
+    static public void sendConversationToDatabase(final Conversation conversation, final String UID, final Messages messageArrayList) {
         initialize(true);
-        DatabaseReference users = setLocation(CONVERSATION_DIR);
-        users.addListenerForSingleValueEvent(new ValueEventListener() {
+        final DatabaseReference conversations = setLocation(CONVERSATION_DIR);
+        final DatabaseReference messages = setLocation(MESSAGE_DIR);
+        conversations.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.child(getUserUID()).exists()) { //może być problem przy 2 logowaniu.
+                if (snapshot.child(getUserUID()).exists() && snapshot.child(UID).exists()) { //może być problem przy 2 logowaniu.
                     // run some code
-                    mDatabaseReference.child(getUserUID()).setValue(conversation); //tymczasowo
+                    DatabaseReference newMessages = messages.push();
+                    String messageID = newMessages.getKey();
+                    newMessages.setValue(messageArrayList);
+
+                    conversation.setMessagesID(messageID);
+
+                    DatabaseReference newConversation = conversations.child(getUserUID()).push();
+                    String conversationID = newConversation.getKey();
+                    newConversation.setValue(conversation);
+
+                    conversations.child(UID).child(conversationID).setValue(conversation);
                 } else {
-                    mDatabaseReference.child(getUserUID()).setValue(conversation);
+                    DatabaseReference newMessages = messages.push();
+                    String messageID = newMessages.getKey();
+                    newMessages.setValue(messageArrayList);
+
+                    conversation.setMessagesID(messageID);
+
+                    DatabaseReference newConversation = conversations.child(getUserUID()).push();
+                    String conversationID = newConversation.getKey();
+                    newConversation.setValue(conversation);
+
+                    conversations.child(UID).child(conversationID).setValue(conversation);
                 }
             }
+
             @Override
-            public void onCancelled(DatabaseError databaseError) { }
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
     }
 
     static public void sendMatchToDatabase(final MatchesList matchesList) {
         initialize(true);
-        DatabaseReference users = setLocation(MATCH_DIR);
-        users.addListenerForSingleValueEvent(new ValueEventListener() {
+        final DatabaseReference match = setLocation(MATCH_DIR);
+        match.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.child(getUserUID()).exists()) {
-                    mDatabaseReference.child(getUserUID()).setValue(matchesList);
+                    match.child(getUserUID()).setValue(matchesList);
                 } else {
-                    mDatabaseReference.child(getUserUID()).setValue(matchesList);
+                    match.child(getUserUID()).setValue(matchesList);
                 }
             }
+
             @Override
-            public void onCancelled(DatabaseError databaseError) { }
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
     }
 
@@ -226,7 +256,7 @@ public class Database {
                                     (ImageRequest.getProfilePictureUri(object.getString("id"), 500, 500)).toString(), //Zdjęcie z profilu Facebook
                                     object.getString("id")
                             );
-                            Log.e("scoia UID", " UID= "+getUserUID());
+                            Log.e("scoia UID", " UID= " + getUserUID());
                             Log.e("scoia facebook", " Token=" + AccessToken.getCurrentAccessToken() + " FirstName=" + object.getString("first_name") + " Email=" + object.getString("email") + " photoUrl=" + (ImageRequest.getProfilePictureUri(object.optString("id"), 500, 500)).toString());
                             sendProfileToDatabase(user); //zabezpieczona przed brakiem połączenia z baza danych
                         } catch (JSONException e) {

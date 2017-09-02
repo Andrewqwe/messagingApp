@@ -9,9 +9,10 @@ public class MatchesList {
     public String listyes;
     public String listno;
 
-    public MatchesList(){}
+    public MatchesList() {
+    }
 
-    public MatchesList(String mid, String listyes, String listno){
+    public MatchesList(String mid, String listyes, String listno) {
         this.mid = mid;
         this.listyes = listyes;
         this.listno = listno;

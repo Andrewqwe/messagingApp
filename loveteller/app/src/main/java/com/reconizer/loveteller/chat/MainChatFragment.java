@@ -9,9 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.reconizer.loveteller.Database;
 import com.reconizer.loveteller.R;
 
 import java.util.ArrayList;
@@ -23,28 +25,65 @@ import java.util.ArrayList;
 public class MainChatFragment extends Fragment {
     private RecyclerView chatView;
     private ChatListAdapter chatListAdapter;
-    private ArrayList<Conversation> conversations = new ArrayList<>();
+    private ArrayList<Conversation> conversationArrayList = new ArrayList<>();
+    private ChildEventListener conversationsChildEventListener;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View myFragmentView = inflater.inflate(R.layout.main_chat_fragment, container, false);
-        conversations.clear();
-        chatListAdapter = new ChatListAdapter(conversations);
+        conversationArrayList.clear();
+        chatListAdapter = new ChatListAdapter(conversationArrayList);
 
-        chatView = (RecyclerView)myFragmentView.findViewById(R.id.chatView);
+        chatView = (RecyclerView) myFragmentView.findViewById(R.id.chatView);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         chatView.setLayoutManager(mLayoutManager);
         chatView.setItemAnimator(new DefaultItemAnimator());
         chatView.setAdapter(chatListAdapter);
 
-        conversations.add(new Conversation(null));
-        conversations.add(new Conversation(null));
+        conversationsChildEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Conversation conversation = dataSnapshot.getValue(Conversation.class);
+                conversationArrayList.add(conversation);
+                chatListAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Conversation conversation = dataSnapshot.getValue(Conversation.class);
+                if (!conversationArrayList.contains(conversation)) {
+                    conversationArrayList.remove(conversation);
+                    conversationArrayList.add(conversation);
+                    chatListAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Conversation conversation = dataSnapshot.getValue(Conversation.class);
+                if (!conversationArrayList.contains(conversation)) {
+                    conversationArrayList.remove(conversation);
+                    chatListAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        Database.setLocation(Database.getConversationPath()).addChildEventListener(conversationsChildEventListener);
 
         return myFragmentView;
     }
 
-    public static MainChatFragment newInstance(){
+    public static MainChatFragment newInstance() {
         MainChatFragment f = new MainChatFragment();
 // https://stackoverflow.com/questions/18413309/how-to-implement-a-viewpager-with-different-fragments-layouts
 // tutorial z ktorego korzystalem

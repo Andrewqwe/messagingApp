@@ -167,6 +167,10 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
                                             mlist2.listmatch += mlist1.mid + " ";
                                             mlist2.listyes = mlist2.listyes.replaceAll(mlist1.mid + " ", "");
                                         }
+                                        RecyclerView.LayoutParams param = (RecyclerView.LayoutParams)matchListRow.getLayoutParams();
+                                        matchListRow.setVisibility(View.GONE);
+                                        param.height = 0;
+                                        param.width = 0;
                                     }
                                     Database.sendMatchToDatabase(mlist2);
                                 }

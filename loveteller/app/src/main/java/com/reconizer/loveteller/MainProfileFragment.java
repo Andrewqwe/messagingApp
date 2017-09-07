@@ -1,6 +1,8 @@
 package com.reconizer.loveteller;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
@@ -12,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,7 +34,7 @@ public class MainProfileFragment extends Fragment {
         final TextView v_name = (TextView) myFragmentView.findViewById(R.id.textViewProfileName);
         final TextView v_desc = (TextView) myFragmentView.findViewById(R.id.textViewProfileDesc);
         final ImageView iv_gender = (ImageView) myFragmentView.findViewById(R.id.imageViewProfileGender);
-
+        final ImageView profilePicture = (ImageView) myFragmentView.findViewById(R.id.profilePhotoImageView);
         final String uid = Database.getUserUID();
 
         if (uid != null)
@@ -64,6 +68,14 @@ public class MainProfileFragment extends Fragment {
                         else if (u.gender.equals("female"))
                             iv_gender.setImageResource(R.drawable.ic_female);
                     }
+                    if(u.photo!=null){
+                        Glide.with(getContext()).load(u.photo)
+                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                .dontTransform().into(profilePicture);
+                        //https://stackoverflow.com/questions/43041259/set-an-image-if-uri-is-empty
+                        //na stacku gosc korzystal z placeholdera ale tutaj zadzialalo bez niego
+                    }
+
                 }
 
                 @Override

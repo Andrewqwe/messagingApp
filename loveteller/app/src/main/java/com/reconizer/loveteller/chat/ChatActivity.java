@@ -80,8 +80,9 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(chatAdapter);
 
-        //============== OBSZAR EKSPERYMENTOW =======================
-
+        //============== Wysylanie wiadomosci i aktualiowanie listy w bazie =======================
+        //TODO: rozwiazac problem w ktorym dwoje uzytkownikow napisze do siebie jednoczesnie
+        // co sprawia ze jeden usuwa wiadomosc drugiego
 
         final TextView messageBox = (TextView) findViewById(R.id.chatTextWritingBox);   //Pole tekstowe z wiadomoscia
         ImageButton sendButton = (ImageButton) findViewById(R.id.chatMessageSendButton); //guzik do wysylania wiadomosci

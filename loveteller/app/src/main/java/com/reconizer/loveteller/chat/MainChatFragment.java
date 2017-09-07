@@ -23,10 +23,8 @@ import java.util.ArrayList;
  */
 
 public class MainChatFragment extends Fragment {
-    private RecyclerView chatView;
     private ChatListAdapter chatListAdapter;
     private ArrayList<Conversation> conversationArrayList = new ArrayList<>();
-    private ChildEventListener conversationsChildEventListener;
 
     @Nullable
     @Override
@@ -35,13 +33,13 @@ public class MainChatFragment extends Fragment {
         conversationArrayList.clear();
         chatListAdapter = new ChatListAdapter(conversationArrayList);
 
-        chatView = (RecyclerView) myFragmentView.findViewById(R.id.chatView);
+        RecyclerView chatView = (RecyclerView) myFragmentView.findViewById(R.id.chatView);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         chatView.setLayoutManager(mLayoutManager);
         chatView.setItemAnimator(new DefaultItemAnimator());
         chatView.setAdapter(chatListAdapter);
 
-        conversationsChildEventListener = new ChildEventListener() {
+        ChildEventListener conversationsChildEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Conversation conversation = dataSnapshot.getValue(Conversation.class);
@@ -84,9 +82,8 @@ public class MainChatFragment extends Fragment {
     }
 
     public static MainChatFragment newInstance() {
-        MainChatFragment f = new MainChatFragment();
-// https://stackoverflow.com/questions/18413309/how-to-implement-a-viewpager-with-different-fragments-layouts
+        // https://stackoverflow.com/questions/18413309/how-to-implement-a-viewpager-with-different-fragments-layouts
 // tutorial z ktorego korzystalem
-        return f;
+        return new MainChatFragment();
     }
 }

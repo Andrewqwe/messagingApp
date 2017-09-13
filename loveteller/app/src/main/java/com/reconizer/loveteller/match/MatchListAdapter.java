@@ -1,6 +1,7 @@
 package com.reconizer.loveteller.match;
 
 import android.content.Context;
+import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -118,10 +119,10 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
         private TextView description;
         private String mid;
         private RelativeLayout matchListRow;
+        private boolean brak;
         MyViewHolder(View view) {
             super(view);
             matchListRow = (RelativeLayout) view.findViewById(R.id.matchListRow);
-
             photo = (ImageView) view.findViewById(R.id.photo);
             name = (TextView) view.findViewById(R.id.name);
             description = (TextView) view.findViewById(R.id.description);
@@ -130,8 +131,10 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
                 @Override
                 public void onClick(View v) {
                     matchListRow.setBackgroundColor(context.getResources().getColor(R.color.yes_match));
+                    brak = true;
                     for(MatchesList mlist1 : myMatchesList) {
                         if(mlist1.mid.equals(Database.getUserUID())) {
+                            brak = false;
                             if(mlist1.listno != null) {
                                 mlist1.listno = mlist1.listno.replaceAll(mid + " ", "");
                             }
@@ -176,7 +179,50 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
                                 }
                             }
                             Database.sendMatchToDatabase(mlist1);
+                            brak = true;
                         }
+                    }
+                    if(brak == true){
+                        MatchesList mlist = new MatchesList(Database.getUserUID(), null, null, null);
+                        mlist.listyes = mid + " ";
+                        for(MatchesList mlist2 : myMatchesList) {
+                            if (mlist2.mid.equals(mid)) {
+                                if (mlist2.listyes != null)
+                                    if (mlist2.listyes.contains(Database.getUserUID())) {
+                                        ArrayList<String> userID = new ArrayList<>();
+                                        userID.add(mlist.mid);
+                                        userID.add(mlist2.mid);
+                                        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.ENGLISH);
+                                        Date date = new Date();
+                                        String time = dateFormat.format(date);
+                                        Messages messages = new Messages(time);
+                                        Conversation conversation = new Conversation(userID);
+                                        Database.sendConversationToDatabase(conversation, mlist2.mid, messages);
+                                        if(mlist.listmatch == null) {
+                                            mlist.listmatch = mid + " ";
+                                            mlist.listyes = mlist.listyes.replaceAll(mid + " ", "");
+                                        }
+                                        else if(!mlist.listmatch.contains(mid)) {
+                                            mlist.listmatch += mid + " ";
+                                            mlist.listyes = mlist.listyes.replaceAll(mid + " ", "");
+                                        }
+                                        if(mlist2.listmatch == null) {
+                                            mlist2.listmatch = mlist.mid + " ";
+                                            mlist2.listyes = mlist2.listyes.replaceAll(mlist.mid + " ", "");
+                                        }
+                                        else if(!mlist2.listmatch.contains(mlist.mid)) {
+                                            mlist2.listmatch += mlist.mid + " ";
+                                            mlist2.listyes = mlist2.listyes.replaceAll(mlist.mid + " ", "");
+                                        }
+                                        RecyclerView.LayoutParams param = (RecyclerView.LayoutParams)matchListRow.getLayoutParams();
+                                        matchListRow.setVisibility(View.GONE);
+                                        param.height = 0;
+                                        param.width = 0;
+                                    }
+                                Database.sendMatchToDatabase(mlist2);
+                            }
+                        }
+                        Database.sendMatchToDatabase(mlist);
                     }
                 }
             });
@@ -185,8 +231,10 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
                 @Override
                 public void onClick(View v) {
                     matchListRow.setBackgroundColor(context.getResources().getColor(R.color.no_match));
+                    brak = true;
                     for(MatchesList mlist : myMatchesList) {
                         if(mlist.mid.equals(Database.getUserUID())) {
+                            brak = false;
                             if(mlist.listyes != null) {
                                 mlist.listyes = mlist.listyes.replaceAll(mid + " ", "");
                             }
@@ -194,6 +242,11 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
                             else if(!mlist.listno.contains(mid)) mlist.listno += mid + " ";
                             Database.sendMatchToDatabase(mlist);
                         }
+                    }
+                    if(brak == true){
+                        MatchesList mlist = new MatchesList(Database.getUserUID(), null, null, null);
+                        mlist.listno = mid + " ";
+                        Database.sendMatchToDatabase(mlist);
                     }
                 }
             });

@@ -193,8 +193,8 @@ public class MatchListAdapter extends RecyclerView.Adapter<MatchListAdapter.MyVi
                                         userID.add(mlist2.mid);
                                         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.ENGLISH);
                                         Date date = new Date();
-                                        String time = dateFormat.format(date);
-                                        Messages messages = new Messages(time);
+                                        //String time = dateFormat.format(date);
+                                        Messages messages = new Messages(date);
                                         Conversation conversation = new Conversation(userID);
                                         Database.sendConversationToDatabase(conversation, mlist2.mid, messages);
                                         if(mlist.listmatch == null) {
